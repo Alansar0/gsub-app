@@ -13,31 +13,31 @@
                 @csrf
                 <!-- Full Name & Email -->
                 <div class="flex flex-col space-y-3">
-                    <input type="text" name="full_name" id="full_name" :value="full_name" placeholder="Full Name"
+                    <input type="text" name="full_name" id="full_name" :value="full_name"  value="{{ old('full_name') }}" placeholder="Full Name"
                         class="w-full px-3 py-2 border border-[#30363d] rounded-md bg-[#0d1117] text-sm text-[#f0f6fc] focus:outline-none focus:ring-1 focus:ring-[#58a6ff]" />
                     @error('full_name')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
-                    <input type="text" name="email" id="email" :value="email" placeholder="Email Address"
+                    <input type="text" name="email" id="email" :value="email"  value="{{ old('email') }}" placeholder="Email Address"
                         class="w-full px-3 py-2 border border-[#30363d] rounded-md bg-[#0d1117] text-sm text-[#f0f6fc] focus:outline-none focus:ring-1 focus:ring-[#58a6ff]" />
                 </div>
                 @error('email')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
                 <!-- Phone -->
-                <input type="tel" :value="phone_number" placeholder="Phone_number" name="phone_number" id="phone_number"
+                <input type="tel" :value="phone_number"  value="{{ old('phone_number') }}" placeholder="Phone_number" name="phone_number" id="phone_number"
                     class="w-full px-3 py-2 border border-[#30363d] rounded-md bg-[#0d1117] text-sm text-[#f0f6fc] focus:outline-none focus:ring-1 focus:ring-[#58a6ff]" />
                 @error('phone_number')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
                 <!-- Password -->
-                <input type="password" :value="password" placeholder="Password" name="password" id="password"
+                <input type="password" :value="password"  value="{{ old('password') }}" placeholder="Password" name="password" id="password"
                     class="w-full px-3 py-2 border border-[#30363d] rounded-md bg-[#0d1117] text-sm text-[#f0f6fc] focus:outline-none focus:ring-1 focus:ring-[#58a6ff]" />
                 @error('password')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
                 <!-- Confirm Password -->
-                <input type="password" :value="password" placeholder="Confirm Password" name="password_confirmation"
+                <input type="password" :value="password"  value="{{ old('password') }}" placeholder="Confirm Password" name="password_confirmation"
                     id="password_confirmation"
                     class="w-full px-3 py-2 border border-[#30363d] rounded-md bg-[#0d1117] text-sm text-[#f0f6fc] focus:outline-none focus:ring-1 focus:ring-[#58a6ff]" />
                 @error('password_confirmation')
@@ -66,7 +66,7 @@
                 <!-- Footer -->
                 <div class="text-center text-xs mt-3">
                     Already have an account?
-                    <a href="#" class="text-[#58a6ff] hover:underline">Sign in</a>
+                    <a href="{{route('login')}}" class="text-[#58a6ff] hover:underline">Sign in</a>
                 </div>
             </form>
         </div>

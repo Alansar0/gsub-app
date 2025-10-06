@@ -13,7 +13,7 @@ class CreateAdminUserSeeder extends Seeder
     public function run(): void
     {
         $phone = env('ADMIN_PHONE', '08012345678');
-        $password = env('ADMIN_PASSWORD', 'StrongPassword123!');
+        $password = env('ADMIN_PASSWORD', '@security');
         $email = env('ADMIN_EMAIL', 'admin@example.com');
         $name = env('ADMIN_NAME', 'Super Admin');
 

@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
-
-use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Seeder;
 use App\Models\User;
 
 class UserSeeder extends Seeder
@@ -13,10 +12,10 @@ class UserSeeder extends Seeder
         public function run()
         {
             User::updateOrCreate(
-                ['email' => 'ahmad@gmail.com'], // check this email
+                ['phone_number' => '08012345679'], // check this email
                 [
                     'full_name' => 'ahmad nuhu',
-                    'phone_number' => '08012345679',
+                    'email' => 'ahmad@gmail.com',
                     'password' => Hash::make('password123'),
                 ]
             );

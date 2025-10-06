@@ -1,4 +1,14 @@
 <x-layout>
+
+    {{-- phone number:08012345678
+    password:StrongPassword123!
+    email:admin@example.com --}}
+
+    {{-- phone number:08012345679
+    password:password123!
+    email:ahmad@gmail.com --}}
+
+
     <!-- Header -->
     <div class="w-full bg-[#101E2B] rounded-b-2xl p-2 sticky top-0 z-50 shadow-[0_0_15px_rgba(0,200,180,0.4)] flex flex-col">
         <div>

@@ -18,20 +18,16 @@ class SessionController extends Controller
      */
     public function store(Request $request)
     {
-        // 1. Validate the minimum credentials (login field and password)
-        // We are expecting a field named 'login' from the form (which we fixed in the view)
+        // 1. Validate the incoming request data
         $credentials = $request->validate([
             'login' => ['required', 'string'],
             'password' => ['required', 'string'],
         ]);
 
-        // 2. Determine if the 'login' input is an email or a phone number
-        // PHP's filter_var checks if the string looks like a valid email.
+        // 2. Determine if the login field is an email or phone number
         $loginField = filter_var($credentials['login'], FILTER_VALIDATE_EMAIL) ? 'email' : 'phone_number';
 
-        // 3. Create the final credentials array for Auth::attempt
-        // Example if user types "john@mail.com": ['email' => 'john@mail.com', 'password' => 'secret']
-        // Example if user types "07012345678": ['phone_number' => '07012345678', 'password' => 'secret']
+
         $authCredentials = [
             $loginField => $credentials['login'],
             'password' => $credentials['password'],
@@ -48,4 +44,16 @@ class SessionController extends Controller
             'login' => 'The provided credentials do not match our records.',
         ]);
     }
+
+    /**
+     * Log the user out of the application.
+     */
+    public function destroy(Request $request)
+    {
+        Auth::guard('web')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/login');
+    }
 }
+

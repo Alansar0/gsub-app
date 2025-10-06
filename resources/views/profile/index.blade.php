@@ -50,11 +50,18 @@
                             class="flex-1 text-center bg-[#238636] text-white rounded-lg py-2 text-sm mx-1 hover:bg-[#2ea043] transition">
                             <i class="fas fa-edit"></i> Edit
                         </button> --}}
-                        <button
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                            @csrf
+                        </form>
+
+                        <button onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                             class="flex-1 text-center bg-[#da3633] text-white rounded-lg py-2 text-sm mx-1 hover:bg-[#f85149] transition">
                             <i class="fas fa-power-off"></i> Log Out
                         </button>
                     </div>
                 </div>
             </div>
+
+
+
     </x-layout>

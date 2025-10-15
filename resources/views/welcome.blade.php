@@ -1,6 +1,6 @@
-<x-layout>
-
-    <!-- Top Background with Logo -->
+<x-layouts.app>
+ <div class="flex flex-col items-center min-h-screen">
+         <!-- Top Background with Logo -->
     <div class="w-full h-[70vh] flex flex-col justify-center items-center text-white -mt-[30%] rounded-b-xl relative"
         style="background: url('{{ Vite::asset('resources/images/wellcomepagebg0.png') }}') no-repeat center center / cover;">
         <img src="{{ Vite::asset('resources/images/logo.png') }}" alt="Cool Data Plug Logo"
@@ -43,6 +43,5 @@
         </div>
 
     </div>
-
-
-</x-layout>
+ </div>
+   </x-layouts.app>

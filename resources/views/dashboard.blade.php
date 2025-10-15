@@ -1,12 +1,4 @@
-<x-layout>
-
-    {{-- phone number:08012345678
-    password:StrongPassword123!
-    email:admin@example.com --}}
-
-    {{-- phone number:08012345679
-    password:password123!
-    email:ahmad@gmail.com --}}
+<x-layouts.app>
 
 
     <!-- Header -->
@@ -16,7 +8,7 @@
             <h1 class="text-xl font-semibold text-[#00E6C3] -mt-1">John Doe</h1>
         </div>
         <!-- Admin Panel Button -->
-        @if (auth()->user()->role === 'admin')
+        @if (auth()->user()->isAdmin())
         <div class="flex justify-center absolute top-8 left-10 transform translate-x-1/2 -translate-y-1/2">
             <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center px-4 py-2 bg-[#233249] text-white text-sm font-semibold rounded-md shadow hover:bg-[#2c4963] transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -25,12 +17,14 @@
                 Admin Panel
             </a>
         </div>
+
         @endif
+
         <div>
-            <button class="absolute top-12 right-8 bg-transparent border-none text-white text-xl cursor-pointer flex items-center">
+            <a  href="{{ route('notifications.index') }}" class="absolute top-12 right-8 bg-transparent border-none text-white text-xl cursor-pointer flex items-center">
                 <span class="material-icons">notifications</span>
                 <span class="absolute -top-2 -right-2 bg-red-600 rounded-full text-xs font-bold w-4 h-4 flex items-center justify-center">3</span>
-            </button>
+            </a>
         </div>
     </div>
 
@@ -48,12 +42,12 @@
 
     <!-- Quick Actions -->
     <div class="grid grid-cols-2 gap-3 mx-5 my-5">
-        <div class="bg-white/3 border border-cyan-900/90 p-2 rounded-2xl text-center transition hover:bg-cyan-200/10 cursor-pointer">
+        <a  href="{{ route('wallet.acc') }}" class="bg-white/3 border border-cyan-900/90 p-2 rounded-2xl text-center transition hover:bg-cyan-200/10 cursor-pointer">
             <div class="bg-[#1A1F26] border border-white/20 rounded-xl inline-block py-3 px-4.5 text-2xl text-cyan-300">
                 <i class="fas fa-wallet text-4xl"></i>
             </div>
             <span class="block mt-2 text-sm">Fund Wallet</span>
-        </div>
+        </a>
         <div class="bg-white/3 border border-cyan-900/90 p-2 rounded-2xl text-center transition hover:bg-cyan-200/10 cursor-pointer">
             <div class="bg-[#1A1F26] border border-white/20 rounded-xl inline-block py-3 px-4.5 text-2xl text-cyan-300">
                 <i class="fas fa-ticket-alt text-4xl"></i>
@@ -141,22 +135,22 @@
         </div>
         <div class="bg-gradient-to-br from-[#182430] to-[#0C141C] border border-white/15 rounded-xl p-4 mb-3 shadow-[0_0_12px_rgba(0,200,180,0.4)] flex justify-between items-center">
             <div class="flex flex-col">
-                <strong class="text-base text-white">John Doe</strong>
-                <span class="text-xs text-white/60">Send Money</span>
+                <strong class="text-base text-white">Vocher Purchased</strong>
+                <span class="text-xs text-white/60">20.01.2025</span>
             </div>
             <div class="text-right text-base font-bold text-red-400">
                 -$96
-                <small class="block text-xs text-white/50">20.01.2025</small>
+                <small class="block text-xs text-white/50">Successful</small>
             </div>
         </div>
         <div class="bg-gradient-to-br from-[#182430] to-[#0C141C] border border-white/15 rounded-xl p-4 mb-3 shadow-[0_0_12px_rgba(0,200,180,0.4)] flex justify-between items-center">
             <div class="flex flex-col">
-                <strong class="text-base text-white">Bryan Pikato</strong>
-                <span class="text-xs text-white/60">Requested Money</span>
+                <strong class="text-base text-white">Wallet Funded</strong>
+                <span class="text-xs text-white/60">20.01.2025</span>
             </div>
             <div class="text-right text-base font-bold text-green-400">
                 +$190
-                <small class="block text-xs text-white/50">18.01.2025</small>
+                <small class="block text-xs text-white/50">Fialed</small>
             </div>
         </div>
         <div class="bg-gradient-to-br from-[#182430] to-[#0C141C] border border-white/15 rounded-xl p-4 mb-3 shadow-[0_0_12px_rgba(0,200,180,0.4)] flex justify-between items-center">
@@ -171,25 +165,7 @@
         </div>
     </div>
 
-    <!-- Bottom Navbar -->
-    <div class="fixed bottom-5 left-2 right-2 bg-[#101E2B] rounded-2xl flex justify-around items-center py-2 shadow-[0_0_15px_rgba(0,200,180,0.4)] z-50">
-        <div class="flex w-full justify-around">
-            <!-- Active item -->
-            <a href="{{route('dashboard')}}"  class="bg-[#00FFD1] text-[#101E2B] rounded-[40px] p-1.5 cursor-pointer">
-                <i class="material-icons !text-[40px]">home</i>
-            </a>
-            <!-- Inactive items -->
-            <a href="{{route('profile')}}"  class="text-white hover:bg-[#00FFD1] hover:text-[#101E2B] rounded-[40px] p-1.5 cursor-pointer">
-                <i class="material-icons !text-[40px]">history</i>
-            </a>
-            <a href="{{route('profile')}}"  class="text-white hover:bg-[#00FFD1] hover:text-[#101E2B] rounded-[40px] p-1.5 cursor-pointer">
-                <i class="material-icons !text-[40px]">support_agent</i>
-            </a>
-            <a href="{{route('profile')}}" class="text-white hover:bg-[#00FFD1] hover:text-[#101E2B] rounded-[40px] p-1.5 cursor-pointer">
-                <i class="material-icons !text-[40px]">person</i>
-            </a>
-        </div>
-    </div>
+
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -208,4 +184,4 @@
             });
         });
     </script>
-</x-layout>
+</x-layouts.app>

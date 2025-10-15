@@ -1,4 +1,4 @@
-<x-layout>
+<x-layouts.app>
     <div class="font-['Roboto'] bg-[#0d1117] text-[#f0f6fc] flex flex-col items-center min-h-screen">
         <div class="w-4/5 mx-auto mt-8 flex flex-col items-center">
             <!-- Logo -->
@@ -83,4 +83,4 @@
             togglePassword.textContent = isPassword ? 'visibility' : 'visibility_off';
         });
     </script>
-</x-layout>
+</x-layouts.app>

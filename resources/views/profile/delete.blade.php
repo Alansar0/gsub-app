@@ -1,4 +1,4 @@
-<x-layout>
+<x-layouts.app>
     <div class="min-h-screen flex items-center justify-center bg-gray-100 px-4">
         <div class="bg-white rounded-lg shadow-lg max-w-sm w-full p-6">
 
@@ -37,4 +37,4 @@
             </div>
         </div>
     </div>
-</x-layout>
+</x-layouts.app>

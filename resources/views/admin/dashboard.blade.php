@@ -1,4 +1,4 @@
-<x-layout>
+<x-layouts.admin>
     <div class="min-h-screen bg-[#0d1117] text-[#f0f6fc] p-6 font-['Roboto']">
 
          <div class=" w-full flex justify-start mt-6">
@@ -104,12 +104,12 @@
         <div id="userMenu1"
             class="hidden absolute mt-2 w-56 rounded-lg shadow-lg bg-[#161b22] ring-1 ring-[#58a6ff]/40 divide-y divide-gray-700 z-50">
             <div class="py-1">
-                <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">All Users</a>
+                <a href="{{ route('viewUser') }}" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">All Users</a>
                 <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Fund User</a>
                 <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Debit User</a>
                 <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Upgrade User</a>
                 <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Block/Unblock</a>
-                <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Change Password</a>
+                <a href="{{route('display.change.password')}}" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Change Password</a>
             </div>
         </div>
     </div>
@@ -149,8 +149,8 @@
         <div id="userMenu3"
             class="hidden absolute mt-2 w-56 rounded-lg shadow-lg bg-[#161b22] ring-1 ring-[#58a6ff]/40 divide-y divide-gray-700 z-50">
             <div class="py-1">
-                 <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">All Transaction</a>
-                <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">processind Oders</a>
+                 <a href="{{ route('T.all') }}" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">All Transaction</a>
+                <a href="{{ route('T.processings') }}" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">processind Oders</a>
                 <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">pending Oders</a>
             </div>
         </div>
@@ -160,7 +160,7 @@
     <div class="relative inline-block text-left bg-[#182430] rounded-xl p-4 shadow-md">
         <button id="userDropdown4"
             class="w-full inline-flex justify-between items-center text-sm font-medium text-[#f0f6fc] focus:outline-none">
-            Setiings
+            Settings
             <svg class="w-5 h-5 ml-2 text-[#58a6ff]" xmlns="http://www.w3.org/2000/svg" fill="none"
                 viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -170,13 +170,50 @@
         <div id="userMenu4"
             class="hidden absolute mt-2 w-56 rounded-lg shadow-lg bg-[#161b22] ring-1 ring-[#58a6ff]/40 divide-y divide-gray-700 z-50">
             <div class="py-1">
-                <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Notify Users</a>
+                <a href="{{ route('Snotify') }}" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Notify Users</a>
                 <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Add App slide_image</a>
                 <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Update Slide text</a>
-                <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">App Contacts</a>
+                <a href="{{ route('S.appContacts') }}" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">App Contacts</a>
             </div>
         </div>
     </div>
     </div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+  // find all dropdown buttons that follow the pattern userDropdown1..N
+  const buttons = Array.from(document.querySelectorAll('[id^="userDropdown"]'));
+  const menus = buttons
+    .map(btn => {
+      const idx = btn.id.replace('userDropdown', '');
+      return document.getElementById('userMenu' + idx);
+    })
+    .filter(Boolean);
 
-</x-layout>
+  // toggle clicked menu, close the rest
+  buttons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const idx = btn.id.replace('userDropdown', '');
+      const menu = document.getElementById('userMenu' + idx);
+      if (!menu) return;
+      const wasHidden = menu.classList.contains('hidden');
+      // close all menus
+      menus.forEach(m => m.classList.add('hidden'));
+      // open the clicked one if it was hidden
+      if (wasHidden) menu.classList.remove('hidden');
+    });
+  });
+
+  // prevent clicks inside menu from closing it
+  menus.forEach(m => m.addEventListener('click', e => e.stopPropagation()));
+
+  // click outside -> close all
+  document.addEventListener('click', () => menus.forEach(m => m.classList.add('hidden')));
+
+  // esc -> close all
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') menus.forEach(m => m.classList.add('hidden'));
+  });
+});
+</script>
+</x-layouts.admin>

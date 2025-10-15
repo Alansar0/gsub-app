@@ -18,12 +18,11 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
 </head>
-
-<body class="m-0 p-0 bg-[#0d1117] text-[#f0f6fc] font-['Roboto']">
-    <main class="min-h-screen">
-        {{ $slot }}
-    </main>
+<body class="bg-[#0d1117] text-white m-0 p-0 font-['Roboto']">
+    <div class="min-h-screen">
+        <main class="min-h-screen">
+            {{ $slot }}
+        </main>
+    </div>
 </body>
-
-
 </html>

@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('full_name');
             $table->string('email')->unique();
             $table->string('phone_number')->unique()->nullable();
-            $table->string('user_type')->default('User'); // e.g., User, Agent, Admin
             $table->string('location')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('role')->default('user');

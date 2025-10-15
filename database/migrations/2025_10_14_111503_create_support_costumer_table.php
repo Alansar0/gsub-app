@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
+        Schema::create('support_costumers', function (Blueprint $table) {
+            $table->id();
+            $table->string('question');
+            $table->string('whatsapp_link')->nullable(); // Admin can override default link
+            $table->timestamps();
         });
     }
 
@@ -21,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('support_costumers');
     }
 };

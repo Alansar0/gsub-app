@@ -24,13 +24,12 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'full_name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
-            'phone_number' => fake()->unique()->phoneNumber(),
-            'user_type' => fake()->randomElement(['User', 'Agent', 'Admin']),
-            'location' => fake()->city(),
+            'full_name' => $this->faker->name(),
+            'email' => $this->faker->unique()->safeEmail(),
+            'phone_number' => $this->faker->unique()->phoneNumber(),
+            'location' => $this->faker->city(),
             'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
+            'password' => Hash::make('password'), // all seeded users share this password
             'remember_token' => Str::random(10),
         ];
     }

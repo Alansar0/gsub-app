@@ -1,7 +1,7 @@
 
-    <x-layout>
+    <x-layouts.app>
             <div class=" bg-[#0d1117] text-[#e6edf3] font-sans flex flex-col w-full h-[100vh]">
-                <div class="bg-[#161b22] rounded-xl shadow-lg w-[95%] h-[82vh] p-4 sm:p-6 md:p-8 mt-16 mx-auto">
+                <div class="bg-[#161b22] rounded-xl shadow-lg w-[95%] h-[82vh] p-4 sm:p-6 md:p-8 mt-10 mx-auto">
 
                     <!-- Header -->
                     <h2 class="text-lg font-semibold mb-6 text-left text-[#58a6ff]">User Details</h2>
@@ -31,7 +31,7 @@
                             </div>
                              <div class="flex justify-between py-4 px-2 border-b border-[#30363d] text-sm">
                                 <span class="text-[#8b949e] font-medium">User Type</span>
-                                <span>{{Auth::user()->user_type}}</span>
+                                <span>{{Auth::user()->role}}</span>
                             </div>
                             <div class="flex justify-between py-4 px-2 border-b border-[#30363d] text-sm">
                                 <span class="text-[#8b949e] font-medium">Location</span>
@@ -64,4 +64,4 @@
 
 
 
-    </x-layout>
+    </x-layouts.app>

@@ -1,4 +1,4 @@
-<x-layout>
+<x-layouts.app>
     <div class="min-h-screen bg-gray-100 flex items-center justify-center px-4 py-8">
         <div class="w-full max-w-md bg-white rounded-xl shadow-md p-6">
 
@@ -71,4 +71,4 @@
             </form>
         </div>
     </div>
-</x-layout>
+</x-layouts.app>

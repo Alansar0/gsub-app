@@ -1,4 +1,4 @@
-<x-layout>
+<x-layouts.app>
     <div class="font-['Roboto'] bg-[#0d1117] text-[#f0f6fc] flex flex-col items-center min-h-screen">
         <div class="w-4/5 mx-auto mt-8 flex flex-col items-center">
             <div class="bg-[#161b22] p-6 rounded-lg shadow-lg w-full mt-20">
@@ -28,4 +28,4 @@
             </div>
         </div>
     </div>
-</x-layout>
+</x-layouts.app>

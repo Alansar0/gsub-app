@@ -33,6 +33,8 @@ class SessionController extends Controller
             'password' => $credentials['password'],
         ];
 
+        
+
         // 4. Attempt authentication
         if (Auth::attempt($authCredentials, $request->boolean('remember'))) {
             $request->session()->regenerate();

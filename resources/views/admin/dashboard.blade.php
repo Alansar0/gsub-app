@@ -1,8 +1,10 @@
 <x-layouts.admin>
     <div class="min-h-screen bg-[#0d1117] text-[#f0f6fc] p-6 font-['Roboto']">
 
-         <div class=" w-full flex justify-start mt-6">
-            <a href="{{route('dashboard')}}"><i class="material-icons">arrow_back</i></a>
+         <div class=" w-full flex justify-start mt-6 mb-4">
+            <a href="{{ url()->previous() }}" class="text-[#58a6ff] hover:underline flex items-center">
+                <i class="material-icons mr-1">arrow_back</i> Back
+            </a>
         </div>
         <div class="w-full text-center -mt-1 p-4">
             <span class="text-2xl font-bold text-[#58a6ff] mb-6">
@@ -173,7 +175,7 @@
                 <a href="{{ route('Snotify') }}" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Notify Users</a>
                 <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Add App slide_image</a>
                 <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Update Slide text</a>
-                <a href="{{ route('S.appContacts') }}" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">App Contacts</a>
+                <a href="{{ route('admin.settings.appContacts') }}" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">App Contacts</a>
             </div>
         </div>
     </div>

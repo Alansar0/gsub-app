@@ -1,0 +1,13 @@
+{{--
+git status
+git add .
+git commit -m "Updated dashboard UI and fixed wallet logic"
+git push origin main
+If your branch name is different (like master or dev), use that instead of main
+
+if you get an error like “rejected” or “non-fast-forward”
+git pull origin main
+git add .
+git commit -m "Merge updates"
+git push origin main
+--}}

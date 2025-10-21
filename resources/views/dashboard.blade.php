@@ -48,17 +48,17 @@
             </div>
             <span class="block mt-2 text-sm">Fund Wallet</span>
         </a>
-        <div class="bg-white/3 border border-cyan-900/90 p-2 rounded-2xl text-center transition hover:bg-cyan-200/10 cursor-pointer">
+        <a href="{{ route('getVocher.index') }}" class="bg-white/3 border border-cyan-900/90 p-2 rounded-2xl text-center transition hover:bg-cyan-200/10 cursor-pointer">
             <div class="bg-[#1A1F26] border border-white/20 rounded-xl inline-block py-3 px-4.5 text-2xl text-cyan-300">
                 <i class="fas fa-ticket-alt text-4xl"></i>
             </div>
             <span class="block mt-2 text-sm">Get Vouchers</span>
-        </div>
+        </a>
     </div>
 
     <!-- Voucher Cards Carousel -->
     <div class="max-w-md mx-5 my-5 mt-4">
-        <div id="voucher-carousel" class="overflow-hidden">
+        <div id="voucher-carousel"  class="overflow-hidden">
             <div class="flex transition-transform duration-700" style="transform: translateX(0%)" id="voucher-track">
                 <!-- Card 1 -->
                 <div class="min-w-full px-2">

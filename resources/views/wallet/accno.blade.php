@@ -2,11 +2,16 @@
 
 <div class="bg-[#0d0d0f] text-white min-h-screen p-4 font-sans">
 
-  <!-- Header -->
-  <div class="flex items-center mb-6">
-    <button class="text-gray-300 text-xl mr-3">←</button>
-    <h1 class="text-lg font-semibold">Bank Transfer</h1>
-  </div>
+
+    <div class=" w-full flex justify-start mt-6 mb-4">
+            <a href="{{ url()->previous() }}" class="text-[#58a6ff] hover:underline flex items-center">
+                <i class="material-icons mr-1">arrow_back</i> Back
+            </a>
+        </div>
+        <!-- Header -->
+        <div class="flex items-center justify-center mb-6">
+            <h1 class="text-lg font-semibold">Bank Transfer</h1>
+        </div>
 
   <!-- Bank Cards -->
   <div class="space-y-4">

@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('support_costumers', function (Blueprint $table) {
+        Schema::create('wallets', function (Blueprint $table) {
             $table->id();
-            $table->string('question');
-            $table->string('whatsapp_link')->nullable(); // Admin can override default link
+            $table->foreignid('user_id')->constrained()->onDelete('cascade');
+            $table->string('account_number')->unique();
+            $table->decimal('balance', 15, 2)->default(0);
+            $table->decimal('prev_balance', 16, 2)->nullable();
+            $table->decimal('new_balance', 16, 2)->nullable();
             $table->timestamps();
         });
     }
@@ -24,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('support_costumers');
+        Schema::dropIfExists('wallets');
     }
 };

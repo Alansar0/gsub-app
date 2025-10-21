@@ -28,6 +28,34 @@ class User extends Authenticatable
         return $this->role === self::ROLE_ADMIN;
     }
 
+    public function wallet()
+    {
+        return $this->hasOne(Wallet::class);
+    }
+
+        protected static function booted()
+    {
+        static::created(function ($user) {
+            // Create a wallet automatically
+            \App\Models\Wallet::create([
+                'user_id' => $user->id,
+                'account_number' => self::generateAccountNumber(),
+                'balance' => 0,
+            ]);
+        });
+    }
+
+    public static function generateAccountNumber()
+    {
+        do {
+            $account = '66' . mt_rand(10000000, 99999999); // e.g. 6612345678
+        } while (self::where('virtual_account', $account)->exists());
+
+        return $account;
+    }
+
+
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -52,10 +80,6 @@ class User extends Authenticatable
         ];
     }
 
-    
 
-    // public function username()
-    // {
-    //     return 'phone_number';
-    // }
+
 }

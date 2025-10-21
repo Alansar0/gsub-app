@@ -1,8 +1,10 @@
 {{-- https://chatgpt.com/s/t_68da6ef76d248191b2db417b430a3a76 --}}
 <x-layouts.app>
     <div class=" w-full h-[70vh] bg-[#0d1117] text-[#f0f6fc] font-['Roboto'] min-h-screen m-0 p-0">
-        <div class=" w-full flex justify-start mt-6">
-            <a href="{{ route('dashboard') }}"><i class="material-icons">arrow_back</i></a>
+        <div class=" w-full flex justify-start mt-6 mb-4">
+            <a href="{{ url()->previous() }}" class="text-[#58a6ff] hover:underline flex items-center">
+                <i class="material-icons mr-1">arrow_back</i> Back
+            </a>
         </div>
         <div class="w-full text-center mt-3  p-6">
             <span class="text-2xl font-bold text-[#58a6ff] mb-6">

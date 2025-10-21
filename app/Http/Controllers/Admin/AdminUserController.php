@@ -88,4 +88,30 @@ class AdminUserController extends Controller
 
         return back()->with('success', $user->full_name.' Password updated successfully to ' . $request->new_password);
     }
+
+
+      public function walletView()
+    {
+        $wallets = Wallet::with('user')->get();
+        return view('admin.walletView', compact('wallets'));
+    }
+
+    public function updateBalance(Request $request, $walletId)
+    {
+        $request->validate([
+            'amount' => 'required|numeric',
+            'action' => 'required|in:credit,debit',
+        ]);
+
+        $wallet = Wallet::findOrFail($walletId);
+
+        if ($request->action == 'credit') {
+            $wallet->credit($request->amount, 'Admin credit');
+        } else {
+            $wallet->debit($request->amount, 'Admin debit');
+        }
+
+        return back()->with('success', 'Wallet updated successfully!');
+    }
+
 }

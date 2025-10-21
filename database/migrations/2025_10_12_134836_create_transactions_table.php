@@ -14,11 +14,7 @@ return new class extends Migration {
         $table->string('status')->default('pending');
         $table->string('reference')->nullable(); // ❌ removed "after `status`"
         $table->text('description')->nullable();
-
-        // New columns for your feature
-        $table->decimal('prev_balance', 16, 2)->nullable();
-        $table->decimal('new_balance', 16, 2)->nullable();
-
+        $table->string('gateway')->nullable(); // e.g. paymentpoint
         $table->timestamps();
     });
 }

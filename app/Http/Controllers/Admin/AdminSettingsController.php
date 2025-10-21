@@ -7,7 +7,9 @@ use App\Notifications\AdminAnnouncement;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\SupportCostumer;
+use App\Models\SupportSubQuestion;
+use App\Models\SupportTopic;
+use App\Models\wallet;
 
 
 
@@ -43,26 +45,51 @@ class AdminSettingsController extends Controller
      // ADMIN VIEW
     public function contactView()
     {
-        $questions = SupportCostumer::all();
-        return view('admin.settings.appContacts', compact('questions'));
+            $topics = SupportTopic::with('subQuestions')->get();
+            return view('admin.settings.appContacts', compact('topics'));
     }
 
     // STORE OR UPDATE QUESTIONS
-    public function contactAction(Request $request)
+    public function storeTitleQuestion(Request $request)
     {
-        $data = $request->validate([
-            'questions' => 'required|array',
-            'questions.*.question' => 'required|string',
-            'questions.*.whatsapp_link' => 'nullable|string',
-        ]);
-
-        SupportCostumer::truncate(); // Optional: clear old ones
-
-        foreach ($data['questions'] as $q) {
-            SupportCostumer::create($q);
+            $request->validate(['title' => 'required', 'whatsapp_link' => 'required|url']);
+            SupportTopic::create($request->only('title', 'whatsapp_link'));
+            return back()->with('success', 'Topic added successfully.');
         }
 
-        return back()->with('success', 'Support questions updated successfully!');
-    }
+        public function storeSubQuestion(Request $request)
+        {
+            $request->validate([
+                'support_topic_id' => 'required|exists:support_topics,id',
+                'question' => 'required|string'
+            ]);
 
+            SupportSubQuestion::create($request->only('support_topic_id', 'question'));
+            return back()->with('success', 'Sub-question added successfully.');
+        }
+
+
+                public function createWallet($user)
+        {
+            // Simulate calling PaymentPoint API to generate account
+            $response = Http::post('https://api.paymentpoint.co/create-account', [
+                'name' => $user->full_name,
+                'email' => $user->email,
+                'phone' => $user->phone_number,
+            ]);
+
+            if ($response->successful()) {
+                $accountNumber = $response->json('account_number');
+
+                // Store on user
+                $user->update(['virtual_account' => $accountNumber]);
+
+                // Create wallet
+                Wallet::create([
+                    'user_id' => $user->id,
+                    'account_number' => $accountNumber,
+                    'balance' => 0,
+                ]);
+            }
+        }
 }

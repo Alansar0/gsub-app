@@ -2,8 +2,10 @@
     <div class="max-w-2xl mx-auto p-6 bg-[#101E2B] rounded-2xl">
 
 
-        <div class=" w-full flex justify-start mt-6">
-            <a href="{{ route('admin.dashboard') }}"><i class="material-icons">arrow_back</i></a>
+        <div class=" w-full flex justify-start mt-6 mb-4">
+            <a href="{{ url()->previous() }}" class="text-[#58a6ff] hover:underline flex items-center">
+                <i class="material-icons mr-1">arrow_back</i> Back
+            </a>
         </div>
         <div class="w-full text-center -mt-1 p-4">
             <span class="text-2xl font-bold text-[#58a6ff] mb-6">

@@ -2,8 +2,10 @@
 <x-layouts.admin>
     <div class="max-w-lg mx-auto bg-[#101E2B] text-white p-6 rounded-2xl shadow-[0_0_15px_rgba(0,255,209,0.4)] mt-10 border border-[#00FFD1]/30">
 
-          <div class=" w-full flex justify-start mt-6">
-            <a href="{{ route('admin.dashboard') }}"><i class="material-icons">arrow_back</i></a>
+          <div class=" w-full flex justify-start mt-6 mb-4">
+            <a href="{{ url()->previous() }}" class="text-[#58a6ff] hover:underline flex items-center">
+                <i class="material-icons mr-1">arrow_back</i> Back
+            </a>
         </div>
         <div class="w-full text-center -mt-1 p-4">
             <span class="text-2xl font-bold text-[#58a6ff] mb-6">

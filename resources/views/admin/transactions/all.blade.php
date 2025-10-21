@@ -1,7 +1,9 @@
 <x-layouts.admin>
     <div class="p-6 min-h-screen bg-[#0B1620] text-white space-y-10">
-         <div class=" flex justify-start absolute top-8 left-6 ">
-            <a href="{{ route('admin.dashboard') }}"><i class="material-icons">arrow_back</i></a>
+         <div class=" w-full flex justify-start mt-6 mb-4">
+            <a href="{{ url()->previous() }}" class="text-[#58a6ff] hover:underline flex items-center">
+                <i class="material-icons mr-1">arrow_back</i> Back
+            </a>
         </div>
         {{-- COMPLETED / FAILED TRANSACTIONS --}}
         <div class="bg-[#101E2B] rounded-2xl mt-15 shadow-[0_0_20px_rgba(0,255,209,0.1)] p-6 border border-[#00FFD1]/20">

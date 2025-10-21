@@ -1,17 +1,25 @@
 <?php
 
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\SupportCostumerController;
+use App\Http\Controllers\SupportController;
+use App\Http\Controllers\WalletController;
+use App\Http\Controllers\GetVocherController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminSettingsController;
 use App\Http\Controllers\Admin\AdminTransactionController;
+use App\Http\Controllers\Admin\SupportmeController;
 use App\Http\Controllers\NotificationController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 
 
@@ -19,13 +27,56 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 Route::view('/test', 'test');
+Route::post('/webhook/paymentpoint', [PaymentController::class, 'webhook'])->name('payment.webhook');
+Route::match(['get', 'post'], '/simulate-webhook', function () {
+    $fakeData = [
+        "notification_status" => "payment_successful",
+        "transaction_id" => "TEST123456",
+        "amount_paid" => 1000,
+        "settlement_amount" => 995,
+        "settlement_fee" => 5,
+        "transaction_status" => "success",
+        "sender" => [
+            "name" => "John Doe",
+            "account_number" => "****1234",
+            "bank" => "PalmPay"
+        ],
+        "receiver" => [
+            "name" => "FAHAX WALLET",
+            "account_number" => "6679854996",
+            "bank" => "PalmPay"
+        ],
+        "customer" => [
+            "name" => "Ahmad Saadu",
+            "email" => "test@example.com",
+            "phone" => "07012345678",
+            "customer_id" => "U123456"
+        ],
+        "description" => "Simulated test payment.",
+        "timestamp" => now()->toISOString()
+    ];
+
+    // Send it to your webhook route
+    $response = Http::post(url('/webhook/paymentpoint'), $fakeData);
+
+    return $response->json();
+});
+
 Route::middleware('auth')->group(function () {
     Route::view('/dashboard', 'dashboard')->name('dashboard');
     Route::view('/profile/index', 'profile.index')->name('profile');
-    Route::view('/wallet/accno', 'wallet.accno')->name('wallet.acc');
+    // Route::view('/wallet/accno', 'wallet.accno')->name('wallet.acc');
+
+    //getVocher route
+    Route::get('/wallet/accno', [WalletController::class, 'acc'])->name('user.wallet');
+    Route::get('/wallet/accno', [WalletController::class, 'acc'])->name('wallet.acc');
+    Route::get('/getVocher/index', [GetVocherController::class, 'index'])->name('getVocher.index');
+    Route::get('/getVocher/paycheckout', [GetVocherController::class, 'paycheckout'])->name('getVocher.paycheckout');
+    Route::get('/getVocher/receipt', [GetVocherController::class, 'receipt'])->name('getVocher.receipt');
 
 
-        // https://akth.gov.ng/register/
+
+    // Notifications
     Route::post('notifications/{id}/read', [NotificationController::class,'markRead'])->name('notifications.read');
     Route::post('notifications/read-all', [NotificationController::class,'markAllRead'])->name('notifications.readAll');
     Route::get('notifications/index', [NotificationController::class,'index'])->name('notifications.index');
@@ -33,12 +84,17 @@ Route::middleware('auth')->group(function () {
 
     // Route::view('/transactions/index', 'index')->name('transactions.index');
     Route::get('/transactions/index', [TransactionController::class, 'index'])->name('transactions.index');
-    Route::get('/support/index', [SupportCostumerController::class, 'index'])->name('support.index');
+    Route::get('/help/index', [SupportController::class, 'index'])->name('help.index');
+
+        //PaymentPoint Routes
+        Route::post('/webhook/paymentpoint', [PaymentController::class, 'webhook'])->name('payment.webhook');
+        Route::post('/pay/initiate', [PaymentController::class, 'initialize'])->name('payment.initialize');
+
     Route::post('/logout', [SessionController::class, 'destroy'])->name('logout');
 });
 
 
-Route::middleware('guest')->group(function () {
+Route::middleware('guest')->group(function (){
     // Registration
     Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
     Route::post('/register', [RegisteredUserController::class, 'store']);
@@ -64,6 +120,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::PATCH('/admin/users/{id}/edit', [AdminUserController::class, 'update'])->name('User.update');
     Route::DELETE('/admin/users/viewUser/{id}', [AdminUserController::class, 'destroy'])->name('viewUser.delete');
 
+
+     Route::get('/admin/user/wallets', [AdminUserController::class, 'walletView'])->name('admin.walletView');
+    Route::post('/admin/user/wallets/{wallet}/update', [AdminUserController::class, 'updateBalance'])->name('admin.wallets.update');
+
     // Admin User Management - Change User Password
     Route::get('/admin/user/changepassword', [AdminUserController::class, 'displaychangepassword'])->name('display.change.password');
    Route::post('/admin/user/changepassword', [AdminUserController::class, 'updatechangePassword'])->name('update.change.Password');
@@ -74,17 +134,45 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('Settings/notifystore', [AdminSettingsController::class, 'notifystore'])->name('Snotifystore');
 
     // Admin Support Management
-    Route::get('/admin/appContacts', [AdminSettingsController::class, 'contactView'])->name('S.appContacts');
-    Route::post('/admin/appContacts', [AdminSettingsController::class, 'contactAction'])->name('S.contactAction');
+    Route::get('/admin/appContacts', [AdminSettingsController::class, 'contactView'])->name('admin.settings.appContacts');
+    Route::post('/admin/appContacts/store', [AdminSettingsController::class, 'storeTitleQuestion'])->name('admin.settings.store');
+    Route::post('/admin/appContacts/sub/store', [AdminSettingsController::class, 'storeSubQuestion'])->name('settings.sub.store');
+
 
     // Admin trasactions
     Route::get('/admin/transactions/all', [AdminTransactionController::class, 'all'])->name('T.all');
     Route::get('/admin/transactions/processings', [AdminTransactionController::class, 'processings'])->name('T.processings');
+});
 
 
+Route::post('/webhook/paymentpoint', function (Request $request) {
+    Log::info('Webhook received:', $request->all());
 
-
+    return response()->json(['status' => 'Webhook received successfully']);
 });
 
 
 
+Route::post('/webhook/paymentpoint', function (Request $request) {
+    $secret = env('PAYMENTPOINT_SECRET'); // Your secret key from dashboard
+
+    $signature = $request->header('Paymentpoint-Signature');
+    $payload = $request->getContent();
+
+    // Compute signature
+    $calculated = hash_hmac('sha256', $payload, $secret);
+
+    if (!hash_equals($calculated, $signature)) {
+        Log::warning('Invalid PaymentPoint signature', ['payload' => $payload]);
+        return response('Invalid signature', 400);
+    }
+
+    // Decode JSON
+    $data = json_decode($payload, true);
+    Log::info('Webhook received', $data);
+
+    // Example: update transaction record in DB here
+    // Transaction::where('transaction_id', $data['transaction_id'])->update([...]);
+
+    return response('Webhook received successfully', 200);
+});

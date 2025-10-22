@@ -10,6 +10,7 @@ use App\Http\Controllers\SupportController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\GetVocherController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\EarnController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Admin\AdminController;
@@ -57,7 +58,8 @@ Route::match(['get', 'post'], '/simulate-webhook', function () {
     ];
 
     // Send it to your webhook route
-    $response = Http::post(url('/webhook/paymentpoint'), $fakeData);
+    // $response = Http::post(url('/webhook/paymentpoint'), $fakeData);
+    $response = Http::post('https://nonleaking-still-michale.ngrok-free.dev/webhook/paymentpoint', $fakeData);
 
     return $response->json();
 });
@@ -74,7 +76,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/getVocher/paycheckout', [GetVocherController::class, 'paycheckout'])->name('getVocher.paycheckout');
     Route::get('/getVocher/receipt', [GetVocherController::class, 'receipt'])->name('getVocher.receipt');
 
-
+    //Earn section
+    Route::get('/earn/index',[EarnController::class, 'index'])->name('earn.index');
 
     // Notifications
     Route::post('notifications/{id}/read', [NotificationController::class,'markRead'])->name('notifications.read');
@@ -145,34 +148,34 @@ Route::middleware(['auth', 'admin'])->group(function () {
 });
 
 
-Route::post('/webhook/paymentpoint', function (Request $request) {
-    Log::info('Webhook received:', $request->all());
+// Route::post('/webhook/paymentpoint', function (Request $request) {
+//     Log::info('Webhook received:', $request->all());
 
-    return response()->json(['status' => 'Webhook received successfully']);
-});
+//     return response()->json(['status' => 'Webhook received successfully']);
+// });
 
 
 
-Route::post('/webhook/paymentpoint', function (Request $request) {
-    $secret = env('PAYMENTPOINT_SECRET'); // Your secret key from dashboard
+// Route::post('/webhook/paymentpoint', function (Request $request) {
+//     $secret = env('PAYMENTPOINT_SECRET'); // Your secret key from dashboard
 
-    $signature = $request->header('Paymentpoint-Signature');
-    $payload = $request->getContent();
+//     $signature = $request->header('Paymentpoint-Signature');
+//     $payload = $request->getContent();
 
-    // Compute signature
-    $calculated = hash_hmac('sha256', $payload, $secret);
+//     // Compute signature
+//     $calculated = hash_hmac('sha256', $payload, $secret);
 
-    if (!hash_equals($calculated, $signature)) {
-        Log::warning('Invalid PaymentPoint signature', ['payload' => $payload]);
-        return response('Invalid signature', 400);
-    }
+//     if (!hash_equals($calculated, $signature)) {
+//         Log::warning('Invalid PaymentPoint signature', ['payload' => $payload]);
+//         return response('Invalid signature', 400);
+//     }
 
-    // Decode JSON
-    $data = json_decode($payload, true);
-    Log::info('Webhook received', $data);
+//     // Decode JSON
+//     $data = json_decode($payload, true);
+//     Log::info('Webhook received', $data);
 
-    // Example: update transaction record in DB here
-    // Transaction::where('transaction_id', $data['transaction_id'])->update([...]);
+//     // Example: update transaction record in DB here
+//     // Transaction::where('transaction_id', $data['transaction_id'])->update([...]);
 
-    return response('Webhook received successfully', 200);
-});
+//     return response('Webhook received successfully', 200);
+// });

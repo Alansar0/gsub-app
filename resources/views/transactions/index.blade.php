@@ -1,25 +1,38 @@
 <x-layouts.app>
-    <div class="p-6 text-white">
-        <h1 class="text-2xl font-semibold mb-4 text-[#00E6C3]">Transaction History</h1>
+    <div class="min-h-screen bg-[#0d1117] text-[#f0f6fc] font-['Roboto'] p-6">
 
+
+
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-6">
+            <h1 class="text-2xl font-semibold text-[#58a6ff] tracking-wide flex items-center gap-2">
+                Transaction History
+            </h1>
+        </div>
+
+        <!-- Transaction List -->
         @if ($transactions->isEmpty())
-            <p class="text-white/70">No transactions yet.</p>
+            <div class="text-center py-10">
+                <p class="text-gray-400 text-sm">No transactions yet.</p>
+            </div>
         @else
-            <div class="space-y-3">
+            <div class="space-y-4">
                 @foreach ($transactions as $transaction)
                     <div
-                        class="bg-gradient-to-br from-[#182430] to-[#0C141C] border border-white/15 rounded-xl p-4 flex justify-between items-center shadow-[0_0_12px_rgba(0,200,180,0.4)]">
+                        class="bg-gradient-to-br from-[#182430] to-[#0C141C] border border-white/10 rounded-2xl p-5 flex justify-between items-center shadow-[0_0_15px_rgba(0,230,195,0.35)] hover:shadow-[0_0_20px_rgba(0,230,195,0.6)] transition-all duration-300">
+
                         <div class="flex flex-col">
-                            <strong class="text-base text-white">{{ $transaction->type }}</strong>
-                            <span class="text-xs text-white/60">{{ $transaction->created_at->format('d M, Y') }}</span>
+                            <strong class="text-base text-[#f0f6fc] font-medium">{{ $transaction->type }}</strong>
+                            <span class="text-xs text-gray-400">{{ $transaction->created_at->format('d M, Y h:i A') }}</span>
                         </div>
-                        {{-- @php
-                            $type = $transaction->type;
-                        @endphp --}}
-                        <div
-                            class="text-right text-base font-bold  text-white/50 ">
-                            ₦{{ number_format($transaction->amount, 2) }}
-                            <small class="block text-xs {{ $transaction->status == 'completed' ? 'text-green-400' : 'text-red-400' }}  capitalize">{{ $transaction->status }}</small>
+
+                        <div class="text-right">
+                            <span class="text-base font-semibold text-[#58a6ff]">
+                                ₦{{ number_format($transaction->amount, 2) }}
+                            </span>
+                            <small class="block text-xs mt-1 {{ $transaction->status == 'completed' ? 'text-green-400' : 'text-red-400' }} capitalize">
+                                {{ $transaction->status }}
+                            </small>
                         </div>
                     </div>
                 @endforeach

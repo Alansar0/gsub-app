@@ -70,4 +70,23 @@ class PaymentController extends Controller
                 return response()->json(['message' => 'Webhook processed successfully']);
             }
 
+                    public function simulateWebhook()
+        {
+            // Fake test data that mimics a real payment
+            $fakeData = [
+                'reference' => 'TEST_REF_' . rand(1000, 9999),
+                'status' => 'success',
+                'account_number' => auth()->user()->virtual_account ?? '1234567890',
+                'amount' => 5000,
+            ];
+
+            // Log the fake data for confirmation
+            \Log::info('Simulated webhook triggered:', $fakeData);
+
+            // Call the actual webhook logic directly (no HTTP call)
+            $request = new \Illuminate\Http\Request($fakeData);
+            return $this->webhook($request);
+        }
+
+
 }

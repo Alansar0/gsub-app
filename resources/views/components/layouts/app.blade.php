@@ -23,47 +23,46 @@
     <main class="min-h-screen">
         {{ $slot }}
     </main>
-    @if (in_array(Route::currentRouteName(), ['dashboard', 'transactions.index', 'help.index', 'profile']))
-        <!-- Bottom Navbar -->
+    @if (in_array(Route::currentRouteName(), ['dashboard', 'transactions.index', 'help.index', 'profile', 'earn.index']))
 
         <div
-  class="fixed bottom-5 left-2 right-2 bg-[#101E2B] rounded-2xl flex justify-around items-center py-2 shadow-[0_0_15px_rgba(0,200,180,0.4)] z-50">
-  <div class="flex w-full justify-around">
+    class="fixed bottom-5 left-2 right-2 bg-[#161b22] border border-[#58a6ff]/20 rounded-2xl flex justify-around items-center py-2 shadow-[0_0_20px_rgba(88,166,255,0.3)] backdrop-blur-md z-50">
+    <div class="flex w-full justify-around">
 
-    <!-- Home -->
-    <a href="{{ route('dashboard') }}"
-      class="hover:bg-[#00FFD1] hover:text-[#101E2B] text-white rounded-[40px] p-1.5 cursor-pointer transition-all duration-200">
-      <i class="material-icons !text-[40px]">home</i>
-    </a>
+        <!-- Home -->
+        <a href="{{ route('dashboard') }}"
+            class="hover:bg-[#58a6ff]/20 hover:text-[#58a6ff] text-[#f0f6fc] rounded-[40px] p-1.5 transition-all duration-300 shadow-[0_0_8px_rgba(88,166,255,0.1)]">
+            <i class="material-icons !text-[34px]">home</i>
+        </a>
 
-    <!-- History -->
-    <a href="{{ route('transactions.index') }}"
-      class="hover:bg-[#00FFD1] hover:text-[#101E2B] text-white rounded-[40px] p-1.5 cursor-pointer transition-all duration-200">
-      <i class="material-icons !text-[40px]">history</i>
-    </a>
+        <!-- History -->
+        <a href="{{ route('transactions.index') }}"
+            class="hover:bg-[#58a6ff]/20 hover:text-[#58a6ff] text-[#f0f6fc] rounded-[40px] p-1.5 transition-all duration-300 shadow-[0_0_8px_rgba(88,166,255,0.1)]">
+            <i class="material-icons !text-[34px]">history</i>
+        </a>
 
-    <!-- Profit (custom white icon) -->
-    <a href="{{ route('transactions.index') }}"
-      class="hover:bg-[#00FFD1] hover:text-[#101E2B] text-white rounded-[40px] p-1.5 cursor-pointer transition-all duration-200">
-      <img src="{{ Vite::asset('resources/images/profit-white.png') }}"
-           alt="Profit"
-           class="w-[40px] h-[40px] brightness-0 invert transition-all duration-10 hover:invert-0" />
-    </a>
+        <!-- Profit (custom icon) -->
+        <a href="{{ route('earn.index') }}"
+            class="hover:bg-[#58a6ff]/20 hover:text-[#58a6ff] rounded-[40px] p-1.5 transition-all duration-300 flex items-center justify-center shadow-[0_0_8px_rgba(88,166,255,0.1)]">
+            <img src="{{ Vite::asset('resources/images/profit-white.png') }}" alt="Profit"
+                class="w-[34px] h-[34px] brightness-0 invert hover:invert-0 transition-all duration-300" />
+        </a>
 
-    <!-- Support -->
-    <a href="{{ route('help.index') }}"
-      class="hover:bg-[#00FFD1] hover:text-[#101E2B] text-white rounded-[40px] p-1.5 cursor-pointer transition-all duration-200">
-      <i class="material-icons !text-[40px]">support_agent</i>
-    </a>
+        <!-- Support -->
+        <a href="{{ route('help.index') }}"
+            class="hover:bg-[#58a6ff]/20 hover:text-[#58a6ff] text-[#f0f6fc] rounded-[40px] p-1.5 transition-all duration-300 shadow-[0_0_8px_rgba(88,166,255,0.1)]">
+            <i class="material-icons !text-[34px]">support_agent</i>
+        </a>
 
-    <!-- Profile -->
-    <a href="{{ route('profile') }}"
-      class="hover:bg-[#00FFD1] hover:text-[#101E2B] text-white rounded-[40px] p-1.5 cursor-pointer transition-all duration-200">
-      <i class="material-icons !text-[40px]">person</i>
-    </a>
+        <!-- Profile -->
+        <a href="{{ route('profile') }}"
+            class="hover:bg-[#58a6ff]/20 hover:text-[#58a6ff] text-[#f0f6fc] rounded-[40px] p-1.5 transition-all duration-300 shadow-[0_0_8px_rgba(88,166,255,0.1)]">
+            <i class="material-icons !text-[34px]">person</i>
+        </a>
 
-  </div>
+    </div>
 </div>
+
     @endif
     <script>
         window.userId = {{ Auth::id() ?? 'null' }};

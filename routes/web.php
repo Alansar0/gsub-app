@@ -78,6 +78,17 @@ Route::middleware('auth')->group(function () {
 
     //Earn section
     Route::get('/earn/index',[EarnController::class, 'index'])->name('earn.index');
+    Route::get('/earn/morningAzkar',[EarnController::class, 'morningAzkar'])->name('earn.morningAzkar');
+    Route::get('/earn/eveningAzkar',[EarnController::class, 'eveningAzkar'])->name('earn.eveningAzkar');
+    Route::get('/earn/friday',[EarnController::class, 'friday'])->name('earn.friday');
+    Route::get('/earn/makaranta/index',[EarnController::class, 'makaranta'])->name('earn.makaranta.index');
+    Route::get('/earn/makaranta/darasi',[EarnController::class, 'darasi'])->name('makaranta.darasi');
+    Route::get('/earn/makaranta/sauraro',[EarnController::class, 'sauraro'])->name('makaranta.sauraro');
+
+
+
+
+
 
     // Notifications
     Route::post('notifications/{id}/read', [NotificationController::class,'markRead'])->name('notifications.read');

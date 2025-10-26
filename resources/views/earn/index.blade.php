@@ -47,8 +47,9 @@
                                 <div class="flex flex-col items-end">
                                     <p class="text-sm text-gray-400">Voucher</p>
                                     <div class="flex items-center gap-2 mt-1">
-                                        <div class="bg-[#58a6ff]/20 p-1.5 rounded-md">
-                                            <i class="fas fa-ticket-alt text-[#58a6ff]"></i>
+                                        <div
+                                            class="bg-[#58a6ff]/20 p-1.5 rounded-md  dark:text-[#00FFD1] text-[#58a6ff]">
+                                            <x-voucher> </x-voucher>
                                         </div>
                                         <p class="font-semibold text-base text-[#f0f6fc]">0</p>
                                         <i class="fas fa-chevron-right text-gray-500 text-sm"></i>
@@ -73,26 +74,26 @@
 
         <!-- Options Section -->
         <div class="grid grid-cols-2 gap-4 px-6 mt-2 w-full max-w-md">
-            <div
+            <a href="{{ route('earn.morningAzkar') }}"
                 class="bg-[#182430] border border-[#58a6ff]/20 rounded-xl p-4 text-center hover:shadow-md hover:shadow-[#58a6ff]/10 transition">
                 <i class="fa-regular fa-sun text-[#58a6ff] text-2xl mb-2"></i>
                 <p class="font-medium text-[#f0f6fc]">Morning Dhikr</p>
-            </div>
-            <div
+            </a>
+            <a href="{{ route('earn.eveningAzkar') }}"
                 class="bg-[#182430] border border-[#58a6ff]/20 rounded-xl p-4 text-center hover:shadow-md hover:shadow-[#58a6ff]/10 transition">
                 <i class="fa-regular fa-moon text-[#58a6ff] text-2xl mb-2"></i>
                 <p class="font-medium text-[#f0f6fc]">Evening Dhikr</p>
-            </div>
-            <div
+            </a>
+            <a href="{{ route('earn.makaranta.index') }}"
                 class="bg-[#182430] border border-[#58a6ff]/20 rounded-xl p-4 text-center hover:shadow-md hover:shadow-[#58a6ff]/10 transition">
-                <i class="fa-regular fa-heart text-[#58a6ff] text-2xl mb-2"></i>
+                <i class="fas fa-book-open text-[#58a6ff] mb-2 text-4xl"></i>
                 <p class="font-medium text-[#f0f6fc]">Makaranta</p>
-            </div>
-            <div
+            </a>
+            <a href="{{ route('earn.friday') }}"
                 class="bg-[#182430] border border-[#58a6ff]/20 rounded-xl p-4 text-center hover:shadow-md hover:shadow-[#58a6ff]/10 transition">
-                <i class="fa-regular fa-envelope text-[#58a6ff] text-2xl mb-2"></i>
+                <i class="fas fa-mosque text-3xl text-[#58a6ff]  mb-2"></i>
                 <p class="font-medium text-[#f0f6fc]">Friday Gifts</p>
-            </div>
+            </a>
         </div>
 
         <!-- Hadith Section -->

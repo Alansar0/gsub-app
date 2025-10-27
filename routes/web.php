@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminSettingsController;
 use App\Http\Controllers\Admin\AdminTransactionController;
 use App\Http\Controllers\Admin\SupportmeController;
+use App\Http\Controllers\Admin\MakarantaController;
 use App\Http\Controllers\NotificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -84,6 +85,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/earn/makaranta/index',[EarnController::class, 'makaranta'])->name('earn.makaranta.index');
     Route::get('/earn/makaranta/darasi',[EarnController::class, 'darasi'])->name('makaranta.darasi');
     Route::get('/earn/makaranta/sauraro',[EarnController::class, 'sauraro'])->name('makaranta.sauraro');
+    Route::get('/earn/makaranta/karanta',[EarnController::class, 'karanta'])->name('makaranta.karanta');
 
 
 
@@ -156,6 +158,14 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Admin trasactions
     Route::get('/admin/transactions/all', [AdminTransactionController::class, 'all'])->name('T.all');
     Route::get('/admin/transactions/processings', [AdminTransactionController::class, 'processings'])->name('T.processings');
+
+    // Makaranta Management
+    //  Route::resource('reading-lessons', [MakarantaController::class, 'ReadingLessons']);
+    Route::get('reading-lessons', [MakarantaController::class, 'ReadingLessons'])->name('reading-lessons.index');
+    Route::post('reading-lessons/{lesson}/quiz', [MakarantaController::class, 'storeQuiz'])->name('admin.reading-lessons.storeQuiz');
+    Route::delete('reading-quizzes/{quiz}', [MakarantaController::class, 'destroyQuiz'])->name('admin.reading-lessons.destroyQuiz');
+
+
 });
 
 

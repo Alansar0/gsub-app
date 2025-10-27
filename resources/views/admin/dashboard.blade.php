@@ -1,7 +1,7 @@
 <x-layouts.admin>
     <div class="min-h-screen bg-[#0d1117] text-[#f0f6fc] p-6 font-['Roboto']">
 
-         <div class=" w-full flex justify-start mt-6 mb-4">
+        <div class=" w-full flex justify-start mt-6 mb-4">
             <a href="{{ url()->previous() }}" class="text-[#58a6ff] hover:underline flex items-center">
                 <i class="material-icons mr-1">arrow_back</i> Back
             </a>
@@ -89,133 +89,176 @@
         </div>
 
         <!-- Bottom Section -->
-    <!-- User Management Grid -->
-<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+        <!-- User Management Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
 
-    <!-- Dropdown 1 -->
-    <div class="relative inline-block text-left bg-[#182430] rounded-xl p-4 shadow-md">
-        <button id="userDropdown1"
-            class="w-full inline-flex justify-between items-center text-sm font-medium text-[#f0f6fc] focus:outline-none">
-            Users
-            <svg class="w-5 h-5 ml-2 text-[#58a6ff]" xmlns="http://www.w3.org/2000/svg" fill="none"
-                viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M19 9l-7 7-7-7" />
-            </svg>
-        </button>
-        <div id="userMenu1"
-            class="hidden absolute mt-2 w-56 rounded-lg shadow-lg bg-[#161b22] ring-1 ring-[#58a6ff]/40 divide-y divide-gray-700 z-50">
-            <div class="py-1">
-                <a href="{{ route('viewUser') }}" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">All Users</a>
-                <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Fund User</a>
-                <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Debit User</a>
-                <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Upgrade User</a>
-                <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Block/Unblock</a>
-                <a href="{{route('display.change.password')}}" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Change Password</a>
+            <!-- Dropdown 1 -->
+            <div class="relative inline-block text-left bg-[#182430] rounded-xl p-4 shadow-md">
+                <button id="userDropdown1"
+                    class="w-full inline-flex justify-between items-center text-sm font-medium text-[#f0f6fc] focus:outline-none">
+                    Users
+                    <svg class="w-5 h-5 ml-2 text-[#58a6ff]" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                <div id="userMenu1"
+                    class="hidden absolute mt-2 w-56 rounded-lg shadow-lg bg-[#161b22] ring-1 ring-[#58a6ff]/40 divide-y divide-gray-700 z-50">
+                    <div class="py-1">
+                        <a href="{{ route('viewUser') }}"
+                            class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">All Users</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Fund
+                            User</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Debit
+                            User</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Upgrade
+                            User</a>
+                        <a href="#"
+                            class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Block/Unblock</a>
+                        <a href="{{ route('display.change.password') }}"
+                            class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Change Password</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dropdown 2 -->
+            <div class="relative inline-block text-left bg-[#182430] rounded-xl p-4 shadow-md">
+                <button id="userDropdown2"
+                    class="w-full inline-flex justify-between items-center text-sm font-medium text-[#f0f6fc] focus:outline-none">
+                    Vocher settings
+                    <svg class="w-5 h-5 ml-2 text-[#58a6ff]" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                <div id="userMenu2"
+                    class="hidden absolute mt-2 w-56 rounded-lg shadow-lg bg-[#161b22] ring-1 ring-[#58a6ff]/40 divide-y divide-gray-700 z-50">
+                    <div class="py-1">
+                        <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Add vocher
+                            plan</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Edit vocher
+                            plan</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Generate
+                            vocher</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dropdown 3 -->
+            <div class="relative inline-block text-left bg-[#182430] rounded-xl p-4 shadow-md">
+                <button id="userDropdown3"
+                    class="w-full inline-flex justify-between items-center text-sm font-medium text-[#f0f6fc] focus:outline-none">
+                    Transaction
+                    <svg class="w-5 h-5 ml-2 text-[#58a6ff]" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                <div id="userMenu3"
+                    class="hidden absolute mt-2 w-56 rounded-lg shadow-lg bg-[#161b22] ring-1 ring-[#58a6ff]/40 divide-y divide-gray-700 z-50">
+                    <div class="py-1">
+                        <a href="{{ route('T.all') }}"
+                            class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">All Transaction</a>
+                        <a href="{{ route('T.processings') }}"
+                            class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">processind Oders</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">pending
+                            Oders</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dropdown 4 -->
+            <div class="relative inline-block text-left bg-[#182430] rounded-xl p-4 shadow-md">
+                <button id="userDropdown4"
+                    class="w-full inline-flex justify-between items-center text-sm font-medium text-[#f0f6fc] focus:outline-none">
+                    Settings
+                    <svg class="w-5 h-5 ml-2 text-[#58a6ff]" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                <div id="userMenu4"
+                    class="hidden absolute mt-2 w-56 rounded-lg shadow-lg bg-[#161b22] ring-1 ring-[#58a6ff]/40 divide-y divide-gray-700 z-50">
+                    <div class="py-1">
+                        <a href="{{ route('Snotify') }}"
+                            class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Notify Users</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Add App
+                            slide_image</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Update
+                            Slide text</a>
+                        <a href="{{ route('admin.settings.appContacts') }}"
+                            class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">App Contacts</a>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
 
-    <!-- Dropdown 2 -->
-    <div class="relative inline-block text-left bg-[#182430] rounded-xl p-4 shadow-md">
-        <button id="userDropdown2"
-            class="w-full inline-flex justify-between items-center text-sm font-medium text-[#f0f6fc] focus:outline-none">
-            Vocher settings
-            <svg class="w-5 h-5 ml-2 text-[#58a6ff]" xmlns="http://www.w3.org/2000/svg" fill="none"
-                viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M19 9l-7 7-7-7" />
-            </svg>
-        </button>
-        <div id="userMenu2"
-            class="hidden absolute mt-2 w-56 rounded-lg shadow-lg bg-[#161b22] ring-1 ring-[#58a6ff]/40 divide-y divide-gray-700 z-50">
-            <div class="py-1">
-                <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Add vocher plan</a>
-                <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Edit vocher plan</a>
-                <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Generate vocher</a>
+            <!-- Dropdown 1 -->
+            <div class="relative inline-block text-left bg-[#182430] rounded-xl p-4 shadow-md">
+                <button id="userDropdown1"
+                    class="w-full inline-flex justify-between items-center text-sm font-medium text-[#f0f6fc] focus:outline-none">
+                    Makaranta Management
+                    <svg class="w-5 h-5 ml-2 text-[#58a6ff]" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                <div id="userMenu1"
+                    class="hidden absolute mt-2 w-56 rounded-lg shadow-lg bg-[#161b22] ring-1 ring-[#58a6ff]/40 divide-y divide-gray-700 z-50">
+                    <div class="py-1">
+                        <a href="{{ route('viewUser') }}"
+                            class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">All Users</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Fund
+                            User</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Debit
+                            User</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Upgrade
+                            User</a>
+                        <a href="#"
+                            class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Block/Unblock</a>
+                        <a href="{{ route('display.change.password') }}"
+                            class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Change Password</a>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                // find all dropdown buttons that follow the pattern userDropdown1..N
+                const buttons = Array.from(document.querySelectorAll('[id^="userDropdown"]'));
+                const menus = buttons
+                    .map(btn => {
+                        const idx = btn.id.replace('userDropdown', '');
+                        return document.getElementById('userMenu' + idx);
+                    })
+                    .filter(Boolean);
 
-    <!-- Dropdown 3 -->
-    <div class="relative inline-block text-left bg-[#182430] rounded-xl p-4 shadow-md">
-        <button id="userDropdown3"
-            class="w-full inline-flex justify-between items-center text-sm font-medium text-[#f0f6fc] focus:outline-none">
-            Transaction
-            <svg class="w-5 h-5 ml-2 text-[#58a6ff]" xmlns="http://www.w3.org/2000/svg" fill="none"
-                viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M19 9l-7 7-7-7" />
-            </svg>
-        </button>
-        <div id="userMenu3"
-            class="hidden absolute mt-2 w-56 rounded-lg shadow-lg bg-[#161b22] ring-1 ring-[#58a6ff]/40 divide-y divide-gray-700 z-50">
-            <div class="py-1">
-                 <a href="{{ route('T.all') }}" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">All Transaction</a>
-                <a href="{{ route('T.processings') }}" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">processind Oders</a>
-                <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">pending Oders</a>
-            </div>
-        </div>
-    </div>
+                // toggle clicked menu, close the rest
+                buttons.forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const idx = btn.id.replace('userDropdown', '');
+                        const menu = document.getElementById('userMenu' + idx);
+                        if (!menu) return;
+                        const wasHidden = menu.classList.contains('hidden');
+                        // close all menus
+                        menus.forEach(m => m.classList.add('hidden'));
+                        // open the clicked one if it was hidden
+                        if (wasHidden) menu.classList.remove('hidden');
+                    });
+                });
 
-    <!-- Dropdown 4 -->
-    <div class="relative inline-block text-left bg-[#182430] rounded-xl p-4 shadow-md">
-        <button id="userDropdown4"
-            class="w-full inline-flex justify-between items-center text-sm font-medium text-[#f0f6fc] focus:outline-none">
-            Settings
-            <svg class="w-5 h-5 ml-2 text-[#58a6ff]" xmlns="http://www.w3.org/2000/svg" fill="none"
-                viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M19 9l-7 7-7-7" />
-            </svg>
-        </button>
-        <div id="userMenu4"
-            class="hidden absolute mt-2 w-56 rounded-lg shadow-lg bg-[#161b22] ring-1 ring-[#58a6ff]/40 divide-y divide-gray-700 z-50">
-            <div class="py-1">
-                <a href="{{ route('Snotify') }}" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Notify Users</a>
-                <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Add App slide_image</a>
-                <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Update Slide text</a>
-                <a href="{{ route('admin.settings.appContacts') }}" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">App Contacts</a>
-            </div>
-        </div>
-    </div>
-    </div>
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-  // find all dropdown buttons that follow the pattern userDropdown1..N
-  const buttons = Array.from(document.querySelectorAll('[id^="userDropdown"]'));
-  const menus = buttons
-    .map(btn => {
-      const idx = btn.id.replace('userDropdown', '');
-      return document.getElementById('userMenu' + idx);
-    })
-    .filter(Boolean);
+                // prevent clicks inside menu from closing it
+                menus.forEach(m => m.addEventListener('click', e => e.stopPropagation()));
 
-  // toggle clicked menu, close the rest
-  buttons.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const idx = btn.id.replace('userDropdown', '');
-      const menu = document.getElementById('userMenu' + idx);
-      if (!menu) return;
-      const wasHidden = menu.classList.contains('hidden');
-      // close all menus
-      menus.forEach(m => m.classList.add('hidden'));
-      // open the clicked one if it was hidden
-      if (wasHidden) menu.classList.remove('hidden');
-    });
-  });
+                // click outside -> close all
+                document.addEventListener('click', () => menus.forEach(m => m.classList.add('hidden')));
 
-  // prevent clicks inside menu from closing it
-  menus.forEach(m => m.addEventListener('click', e => e.stopPropagation()));
-
-  // click outside -> close all
-  document.addEventListener('click', () => menus.forEach(m => m.classList.add('hidden')));
-
-  // esc -> close all
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') menus.forEach(m => m.classList.add('hidden'));
-  });
-});
-</script>
+                // esc -> close all
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') menus.forEach(m => m.classList.add('hidden'));
+                });
+            });
+        </script>
 </x-layouts.admin>

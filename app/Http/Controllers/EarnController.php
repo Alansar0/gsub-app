@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\ReadingLesson;
+use App\Models\ReadingQuiz;
+use App\Model\SauraroAudio;
+
 
 class EarnController extends Controller
 {
@@ -46,14 +50,27 @@ class EarnController extends Controller
 
         public function darasi()
         {
+                    $lesson = ReadingLesson::latest()->first(); // or find by id
 
-            return view('earn.makaranta.darasi');
+            // return view('earn.makaranta.darasi');
+                    return view('earn.makaranta.darasi', compact('lesson'));
+
         }
 
 
         public function sauraro()
         {
-
-            return view('earn.makaranta.sauraro');
+             // best: load latest lesson or null
+        $lesson = ReadingLesson::latest()->first(); // or find by id
+        return view('earn.makaranta.sauraro', compact('lesson'));
         }
+
+
+
+        public function karanta(ReadingLesson $lesson)
+    {
+                $lesson = ReadingLesson::latest()->first();
+
+        return view('earn.makaranta.karanta', compact('lesson'));
+    }
 }

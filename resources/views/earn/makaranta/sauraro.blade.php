@@ -1,9 +1,16 @@
 <x-layouts.app>
 <div class="min-h-screen flex flex-col items-center justify-center bg-[#0C141C] text-white px-4 py-10">
-    <!-- Surah Info -->
+    <!-- Back Button -->
+    <a href="{{ route('makaranta.darasi', ['course' => $course]) }}"
+       class="absolute left-6 top-6 text-[#58a6ff] hover:underline flex items-center">
+        <i class="material-icons mr-1">arrow_back</i>
+        Back
+    </a>
+
+    <!-- Audio Info -->
     <div class="text-center mb-6">
-        <h2 class="text-[#00FFD1] text-2xl font-semibold">Karatu 1</h2>
-        <p class="text-[#94A3B8] text-sm mt-1">kura kuari 100 Acikin Sallarmu</p>
+        <h2 class="text-[#00FFD1] text-2xl font-semibold">{{ $displayFile }}</h2>
+        <p class="text-[#94A3B8] text-sm mt-1">{{ $displayName }}</p>
     </div>
 
     <!-- Circular Artwork -->
@@ -61,7 +68,7 @@
     </div>
 
     <!-- Audio Element -->
-    <audio id="audioPlayer" src="{{ asset('audio/arrahman.mp3') }}"></audio>
+    <audio id="audioPlayer" src="{{ asset($path) }}"></audio>
 </div>
 
 <!-- Quiz Modal -->

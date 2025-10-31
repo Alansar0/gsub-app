@@ -6,7 +6,7 @@
             {{-- Fixed Header --}}
             <header class="fixed top-0 left-0 right-0 z-40 bg-[#182430] border-b border-[#233044] shadow-[0_0_15px_rgba(88,166,255,0.25)]">
                 <div class="text-center py-4 relative">
-                    <a href="{{ url()->previous() }}" 
+                    <a href="{{ url()->previous() }}"
                        class="absolute left-6 top-1/2 -translate-y-1/2 text-[#58a6ff] hover:underline flex items-center">
                         <i class="material-icons mr-1 text-[#58a6ff]">arrow_back</i>
                         Back
@@ -36,17 +36,20 @@
 
             {{-- Main Section --}}
             <main class="flex-grow px-6 py-8 grid grid-cols-2 gap-5 overflow-y-auto mt-[390px]">
-
                 @foreach ([
-                    ['title' => 'Sharrin Dajjal'],
-                    ['title' => 'Prayer Times'],
-                    ['title' => 'Qibla Compass'],
-                    ['title' => 'Dua'],
-                    ['title' => 'Donation'],
-                    ['title' => 'About Us'],
+                    ['title' => 'Sharrin Dajjal', 'folder' => 'sharrindajjal'],
+                    ['title' => 'kurakurai100', 'folder' => 'kurakurai100'],
+                    ['title' => 'auretayya', 'folder' => 'auretayya'],
+                    ['title' => 'kimiyya da addini', 'folder' => 'kimiyya'],
+                    ['title' => 'hanyoyin samun lada', 'folder' => 'hanyoyin'],
+                    ['title' => 'sirrinsu a rayuwa', 'folder' => 'sirrinsu'],
+                    ['title' => 'ilimin mala\'iku', 'folder' => 'malaiku'],
+                    ['title' => 'ilimin annabawa', 'folder' => 'annabawa'],
+                    ['title' => 'tarihin al\'ummar musulmi', 'folder' => 'tarihin'],
+                    ['title' => 'fikihu a saukake', 'folder' => 'fikihu'],
                 ] as $item)
                     <div class="flex flex-col items-center">
-                        <a href="{{ route('makaranta.darasi') }}"
+                        <a href="{{ route('makaranta.darasi', ['course' => $item['folder']]) }}"
                             class="bg-[#182430] py-13 px-20 w-full rounded-2xl shadow-[0_0_12px_rgba(88,166,255,0.25)] flex items-center justify-center border border-[#58a6ff]/30 hover:bg-[#233044] transition transform hover:scale-105 bg-center bg-cover hover:shadow-[0_0_20px_rgba(88,166,255,0.45)]"
                             style="background-image: url('{{ Vite::asset('resources/images/kurakurai100.png') }}');">
                         </a>

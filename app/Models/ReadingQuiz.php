@@ -21,4 +21,4 @@ class ReadingQuiz extends Model
         return $this->belongsTo(ReadingLesson::class);
     }
 }
-}
+

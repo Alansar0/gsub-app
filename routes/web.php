@@ -84,10 +84,22 @@ Route::middleware('auth')->group(function () {
     Route::get('/earn/friday',[EarnController::class, 'friday'])->name('earn.friday');
     Route::get('/earn/makaranta/index',[EarnController::class, 'makaranta'])->name('earn.makaranta.index');
     Route::get('/earn/makaranta/darasi',[EarnController::class, 'darasi'])->name('makaranta.darasi');
-    Route::get('/earn/makaranta/sauraro',[EarnController::class, 'sauraro'])->name('makaranta.sauraro');
-    Route::get('/earn/makaranta/karanta',[EarnController::class, 'karanta'])->name('makaranta.karanta');
 
 
+    Route::get('/earn/makaranta/{course}/{file}',[EarnController::class, 'sauraro'])->name('makaranta.sauraro');
+    Route::get('/earn/makaranta/karanta/{pageId}',[EarnController::class, 'karanta'])->name('makaranta.karanta');
+
+    // Audio/course listing + player
+    Route::get('/earn/makaranta/course/{course}/audios', [EarnController::class, 'audios'])->name('makaranta.audios.index');
+    Route::get('/earn/makaranta/course/{course}/audio/{file}', [EarnController::class, 'audioPlayer'])->name('makaranta.audio.player');
+
+    Route::post('/earn/makaranta/quiz/{pageId}', [EarnController::class, 'submitQuiz'])->name('quiz.submit');
+
+
+
+
+// Route::get('/listen/{audio}', [AudioPlayController::class, 'show'])->name('audio.play');
+// Route::post('/quiz/submit', [AudioPlayController::class, 'submitQuiz'])->name('quiz.submit');
 
 
 
@@ -128,7 +140,7 @@ Route::middleware('guest')->group(function (){
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/admin/dashboard', [AdminController::class, 'index' ])->name('admin.dashboard');
+    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 
     // Admin User Management - View All Users
     Route::get('/admin/user/viewUser', [AdminUserController::class, 'view'])->name('viewUser');
@@ -136,16 +148,15 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::PATCH('/admin/users/{id}/edit', [AdminUserController::class, 'update'])->name('User.update');
     Route::DELETE('/admin/users/viewUser/{id}', [AdminUserController::class, 'destroy'])->name('viewUser.delete');
 
-
-     Route::get('/admin/user/wallets', [AdminUserController::class, 'walletView'])->name('admin.walletView');
+    // Admin User Wallet Management
+    Route::get('/admin/user/wallets', [AdminUserController::class, 'walletView'])->name('admin.walletView');
     Route::post('/admin/user/wallets/{wallet}/update', [AdminUserController::class, 'updateBalance'])->name('admin.wallets.update');
 
-    // Admin User Management - Change User Password
+    // Admin User Password Management
     Route::get('/admin/user/changepassword', [AdminUserController::class, 'displaychangepassword'])->name('display.change.password');
-   Route::post('/admin/user/changepassword', [AdminUserController::class, 'updatechangePassword'])->name('update.change.Password');
+    Route::post('/admin/user/changepassword', [AdminUserController::class, 'updatechangePassword'])->name('update.change.Password');
 
-
-   // Admin Settings Notify Users
+    // Admin Settings Notify Users
     Route::get('Settings/notify', [AdminSettingsController::class, 'notify'])->name('Snotify');
     Route::post('Settings/notifystore', [AdminSettingsController::class, 'notifystore'])->name('Snotifystore');
 
@@ -154,16 +165,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/admin/appContacts/store', [AdminSettingsController::class, 'storeTitleQuestion'])->name('admin.settings.store');
     Route::post('/admin/appContacts/sub/store', [AdminSettingsController::class, 'storeSubQuestion'])->name('settings.sub.store');
 
-
-    // Admin trasactions
+    // Admin transactions
     Route::get('/admin/transactions/all', [AdminTransactionController::class, 'all'])->name('T.all');
     Route::get('/admin/transactions/processings', [AdminTransactionController::class, 'processings'])->name('T.processings');
-
-    // Makaranta Management
-    //  Route::resource('reading-lessons', [MakarantaController::class, 'ReadingLessons']);
-    Route::get('reading-lessons', [MakarantaController::class, 'ReadingLessons'])->name('reading-lessons.index');
-    Route::post('reading-lessons/{lesson}/quiz', [MakarantaController::class, 'storeQuiz'])->name('admin.reading-lessons.storeQuiz');
-    Route::delete('reading-quizzes/{quiz}', [MakarantaController::class, 'destroyQuiz'])->name('admin.reading-lessons.destroyQuiz');
 
 
 });

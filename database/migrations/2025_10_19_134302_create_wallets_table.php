@@ -18,6 +18,8 @@ return new class extends Migration
             $table->decimal('balance', 15, 2)->default(0);
             $table->decimal('prev_balance', 16, 2)->nullable();
             $table->decimal('new_balance', 16, 2)->nullable();
+            $table->decimal('cashback_balance', 10, 2)->default(0);
+            $table->integer('voucher_balance')->default(0);
             $table->timestamps();
         });
     }

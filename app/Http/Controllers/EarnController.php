@@ -3,10 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\ReadingLesson;
-use App\Models\ReadingQuiz;
-use App\Models\Audio;
-use App\Models\Quiz;
 use App\Models\UserReward;
 use Illuminate\Http\Response;
 
@@ -16,8 +12,14 @@ class EarnController extends Controller
 {
     public function index()
         {
+            $wallet = \App\Models\Wallet::firstOrCreate(['user_id' => auth()->id()]);
 
-            return view('earn.index');
+            
+            $cashback = $wallet->cashback_balance ?? 0;
+            $vouchers = $wallet->voucher_balance ?? 0;
+
+            return view('earn.index', compact('cashback', 'vouchers'));
+
         }
 
 
@@ -25,7 +27,7 @@ class EarnController extends Controller
     public function morningAzkar()
         {
 
-            $adhkar = include resource_path('views/components/M_adhkar-data.blade.php');
+            $adhkar = include resource_path('views/components/azkar/M_adhkar-data.blade.php');
 
             return view('earn.morningAzkar', compact('adhkar'));
         }
@@ -33,7 +35,7 @@ class EarnController extends Controller
 
     public function eveningAzkar()
         {
-           $adhkar = include resource_path('views/components/E_adhkar-data.blade.php');
+           $adhkar = include resource_path('views/components/azkar/E_adhkar-data.blade.php');
 
             return view('earn.eveningAzkar', compact('adhkar'));
 
@@ -46,25 +48,27 @@ class EarnController extends Controller
             return view('earn.makaranta.index');
         }
 
-    public function friday()
-        {
-            return view('earn.friday');
-        }
+        public function friday($shafi = 1)
+            {
+                $adhkar = include resource_path('views/components/friday/salawat.blade.php');
+
+                $quran = collect(include resource_path('views/components/friday/suratukahf.blade.php'));
+                $page = $quran->firstWhere('page', $shafi);
+
+                if (!$page) {
+                    abort(404);
+                }
+
+                return view('earn.friday', compact('adhkar', 'page'));
+            }
 
     /**
      * Show the darasi view with audio files.
      *
      * @return \Illuminate\View\View
      */
-    public function darasi()
+    public function darasi($course = 'sharrindajjal')
     {
-        // Get latest lesson and quizzes
-        $lesson = ReadingLesson::latest()->first();
-        $quizzesForAudio = $lesson ? $lesson->quizzes : [];
-
-        // Default course
-        $course = 'sharrindajjal';
-
         // Audio directory
         $dir = public_path('audios/' . $course);
         $files = [];
@@ -85,15 +89,13 @@ class EarnController extends Controller
         return view(
             'earn.makaranta.darasi',
             [
-                'lesson' => $lesson,
-                'quizzesForAudio' => $quizzesForAudio,
                 'files' => $files,
                 'course' => $course,
                 'displayName' => $displayName
             ]
         );
 
-        }
+    }
 
 
         //
@@ -104,36 +106,50 @@ class EarnController extends Controller
      * @param string $file The audio file name
      * @return \Illuminate\View\View
      */
+
     public function sauraro($course, $file)
-    {
-        $lesson = ReadingLesson::latest()->first();
-        $quizzesForAudio = $lesson ? $lesson->quizzes : collect();
+{
+    // 🔹 Build audio file path
+    $relPath = 'audios/' . $course . '/' . $file;
+    $fullPath = public_path($relPath);
 
-        // Get audio file path
-        $relPath = 'audios/' . $course . '/' . $file;
-        $fullPath = public_path($relPath);
-
-        if (!file_exists($fullPath)) {
-            abort(404);
-        }
-
-        // Clean display names
-        $displayName = ucwords(str_replace(['_', '-'], ' ', $course));
-        $displayFile = ucwords(str_replace(['_', '-'], ' ', pathinfo($file, PATHINFO_FILENAME)));
-
-        return view(
-            'earn.makaranta.sauraro',
-            [
-                'lesson' => $lesson,
-                'quizzesForAudio' => $quizzesForAudio,
-                'course' => $course,
-                'file' => $file,
-                'path' => $relPath,
-                'displayName' => $displayName,
-                'displayFile' => $displayFile
-            ]
-        );
+    if (!file_exists($fullPath)) {
+        abort(404, 'Audio file not found.');
     }
+
+    // 🔹 Display names
+    $displayName = ucwords(str_replace(['_', '-'], ' ', $course));
+    $displayFile = ucwords(str_replace(['_', '-'], ' ', pathinfo($file, PATHINFO_FILENAME)));
+
+    // 🔹 Load quiz from config/sauraro/
+    $quizConfigPath = config_path("sauraro/quiz_data_{$course}.php");
+    $quizzes = [];
+
+    if (file_exists($quizConfigPath)) {
+        $quizConfig = include($quizConfigPath);
+        // Match the audio file name, e.g., "001.mp3"
+        $fileQuizzes = collect($quizConfig)->firstWhere('file', $file);
+        $quizzes = $fileQuizzes ? $fileQuizzes['questions'] : [];
+    } else {
+        \Log::warning("Quiz config not found for Sauraro course", [
+            'course' => $course,
+            'path' => $quizConfigPath
+        ]);
+    }
+
+    // 🔹 Save course in session (for quiz reward logic)
+    session(['current_course' => $course]);
+
+    return view('earn.makaranta.sauraro', [
+        'course' => $course,
+        'file' => $file,
+        'path' => $relPath,
+        'displayName' => $displayName,
+        'displayFile' => $displayFile,
+        'quizzes' => $quizzes
+    ]);
+}
+
 
 
         /**
@@ -148,7 +164,7 @@ class EarnController extends Controller
             $course = session('current_course', 'kurakurai100');
 
             // Load course-specific content file
-            $contentFile = "components/{$course}.blade.php";
+            $contentFile = "components/karanta/{$course}.blade.php";
             if (!file_exists(resource_path("views/{$contentFile}"))) {
                 abort(404, 'Course content not found.');
             }
@@ -162,7 +178,7 @@ class EarnController extends Controller
             }
 
             // Load course-specific quiz data
-            $quizConfig = "quiz_data_{$course}";
+            $quizConfig = "karanta.quiz_data_{$course}";
             $allQuizzes = collect(config($quizConfig, []));
             $pageQuizzes = $allQuizzes->firstWhere('page_id', (int)$pageId);
             $quizzes = $pageQuizzes ? $pageQuizzes['questions'] : [];
@@ -173,61 +189,103 @@ class EarnController extends Controller
             return view('earn.makaranta.karanta', compact('page', 'quizzes', 'course', 'displayName'));
     }
 
+public function submitQuiz(Request $request, $pageId)
+{
+    $course = session('current_course', 'kurakurai100');
+    $type = $request->input('type', 'karanta'); // 🔹 Get quiz type (karanta or sauraro)
 
-    public function submitQuiz(Request $request, $pageId)
-    {
-        // Get current course from session
-        $course = session('current_course', 'kurakurai100');
-
-        // Load course-specific quiz data
-        $quizConfig = "quiz_data_{$course}";
-        $pageQuizzes = collect(config($quizConfig, []))->firstWhere('page_id', (int)$pageId);
-        $quizzes = $pageQuizzes ? $pageQuizzes['questions'] : [];
-
-        // ensure we have questions to check
-        if (empty($quizzes)) {
-            return back()->with('error', 'No quiz available for this page.');
+    try {
+        // 🧩 Load course-specific quiz data dynamically
+        $quizConfigPath = config_path("{$type}/quiz_data_{$course}.php");
+        if (!file_exists($quizConfigPath)) {
+            \Log::error("Quiz config file not found", [
+                'path' => $quizConfigPath,
+                'course' => $course,
+                'type' => $type
+            ]);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Quiz configuration not found.'
+            ]);
         }
 
-        $selected = $request->only(['quiz0', 'quiz1']);
-        $correctCount = 0;
+        $quizConfig = include($quizConfigPath);
 
-        foreach ($selected as $key => $answer) {
-            $quizIndex = str_replace('quiz', '', $key);
-            if (isset($quizzes[$quizIndex]) && $answer == $quizzes[$quizIndex]['correct']) {
+        // 🔍 Locate correct quiz by ID or file name
+        $pageQuizzes = collect($quizConfig)->firstWhere(
+            $type === 'karanta' ? 'page_id' : 'file',
+            $type === 'karanta' ? (int) $pageId : $pageId
+        );
+
+        $quizzes = $pageQuizzes ? $pageQuizzes['questions'] : [];
+
+        if (empty($quizzes)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No quizzes available for this lesson yet.'
+            ]);
+        }
+
+        // 📝 Collect submitted answers
+        $submitted = collect($request->all())
+            ->filter(fn($v, $k) => str_starts_with($k, 'quiz'))
+            ->toArray();
+
+        // ✅ Check answers
+        $correctCount = 0;
+        foreach ($submitted as $key => $answer) {
+            $quizIndex = (int) str_replace('quiz', '', $key);
+            if (
+                isset($quizzes[$quizIndex]) &&
+                (string) $answer === (string) $quizzes[$quizIndex]['correct']
+            ) {
                 $correctCount++;
             }
         }
 
-        if ($correctCount == count($selected)) {
-            return back()->with('success', '✅ Correct! You’ve earned ₦50 reward!');
+        // 💰 Success: All correct
+        if ($correctCount > 0 && $correctCount === count($submitted)) {
+
+            // 🔹 Use reward wallet, not main wallet
+            $wallet = \App\Models\Wallet::firstOrCreate(['user_id' => auth()->id()]);
+
+            // Add ₦50 cashback
+            $wallet->cashback_balance = ($wallet->cashback_balance ?? 0) + 50;
+
+            // Convert ₦200 cashback = 1 voucher
+            while ($wallet->cashback_balance >= 200) {
+                $wallet->cashback_balance -= 200;
+                $wallet->voucher_balance = ($wallet->voucher_balance ?? 0) + 1;
+            }
+
+            $wallet->save();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => '🎉 Correct! You earned ₦50 cashback. Keep going!'
+            ]);
         }
 
-        return back()->with('error', '❌ Incorrect. Try again after 1 minute.');
+        // ❌ Wrong answer case
+        return response()->json([
+            'status' => 'error',
+            'message' => '❌ Incorrect answers. Try again later.'
+        ]);
+
+    } catch (\Throwable $e) {
+        \Log::error('Quiz submission failed', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
+        ]);
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'An unexpected error occurred.'
+        ]);
     }
-
-    // public function karanta()
-    // {
-    //     $lesson = ReadingLesson::latest()->first();
-    //     $quizzesForAudio = $lesson ? $lesson->quizzes : collect();
-    //     return view('earn.makaranta.karanta', compact('lesson', 'quizzesForAudio'));
-    // }
+}
 
 
 
-    //     public function sauraro()
-    //     {
-    //          // best: load latest lesson or null
-    //     $lesson = ReadingLesson::latest()->first(); // or find by id
-    //     return view('earn.makaranta.sauraro', compact('lesson'));
-    //     }
 
-
-
-    //     public function karanta(ReadingLesson $lesson)
-    // {
-    //             $lesson = ReadingLesson::latest()->first();
-
-    //     return view('earn.makaranta.karanta', compact('lesson'));
-    // }
 }

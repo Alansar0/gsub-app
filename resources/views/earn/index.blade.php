@@ -38,7 +38,7 @@
                                         <div class="bg-yellow-500/20 p-1.5 rounded-full">
                                             <i class="fas fa-coins text-yellow-400"></i>
                                         </div>
-                                        <p class="font-semibold text-base text-[#f0f6fc]">₦ 75.60</p>
+                                        <p class="font-semibold text-base text-[#f0f6fc]">₦ {{ number_format($cashback, 2) }}</p>
                                         <i class="fas fa-chevron-right text-gray-500 text-sm"></i>
                                     </div>
                                 </div>
@@ -51,7 +51,7 @@
                                             class="bg-[#58a6ff]/20 p-1.5 rounded-md  dark:text-[#00FFD1] text-[#58a6ff]">
                                             <x-voucher> </x-voucher>
                                         </div>
-                                        <p class="font-semibold text-base text-[#f0f6fc]">0</p>
+                                        <p class="font-semibold text-base text-[#f0f6fc]">{{ $vouchers }}</p>
                                         <i class="fas fa-chevron-right text-gray-500 text-sm"></i>
                                     </div>
                                 </div>
@@ -59,7 +59,7 @@
                         </div>
 
                         <div class="flex justify-center  absolute left-0 right-0  z-10">
-                            <button
+                            <button onclick="window.location.href='{{ route('earn.makaranta.index') }}'"
                                 class="bg-[#58a6ff] text-[#0d1117] px-8 py-2 rounded-xl shadow-md hover:bg-[#1f6feb] transition">
                                 Earn More Vochers →
                             </button>
@@ -89,7 +89,7 @@
                 <i class="fas fa-book-open text-[#58a6ff] mb-2 text-4xl"></i>
                 <p class="font-medium text-[#f0f6fc]">Makaranta</p>
             </a>
-            <a href="{{ route('earn.friday') }}"
+            <a href="{{ route('earn.friday', ['shafi' => 1]) }}"
                 class="bg-[#182430] border border-[#58a6ff]/20 rounded-xl p-4 text-center hover:shadow-md hover:shadow-[#58a6ff]/10 transition">
                 <i class="fas fa-mosque text-3xl text-[#58a6ff]  mb-2"></i>
                 <p class="font-medium text-[#f0f6fc]">Friday Gifts</p>

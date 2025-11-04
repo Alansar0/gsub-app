@@ -12,7 +12,9 @@
                 <h1 class="text-white text-xl font-semibold tracking-wide"> {{ $displayName }} </h1>
             </div>
 
-            {{-- Switcher --}}
+
+
+            {{--Switcher--}}
             <div
                 class="w-[65vw] mx-auto p-1 flex items-center justify-between bg-[#0C141C] rounded-full border border-[#00FFD1]/50 shadow-[0_0_20px_rgba(0,255,209,0.4)] mb-3 transition-all">
                 <button id="btnSauraro" onclick="window.location.href='{{ route('makaranta.darasi') }}'"
@@ -32,7 +34,11 @@
                 </button>
             </div>
         </header>
+<?php
 
+
+
+?>
 
         {{-- 🔊 SAURARO SECTION --}}
         <section id="sauraroView"
@@ -40,7 +46,7 @@
             <div class="flex justify-center mb-4">
                 <div
                     class="relative bg-[#161b22] rounded-2xl p-3 border border-[#58a6ff]/50 shadow-[0_0_15px_rgba(88,166,255,0.4)] hover:shadow-[0_0_25px_rgba(88,166,255,0.7)] transition">
-                    <img src="{{ Vite::asset('resources/images/kurakurai100.png') }}" alt="Makaranta Image"
+                    <img src="{{ Vite::asset('resources/images/kurakurai100.png')}}" alt="Makaranta Image"
                         class="w-[85vw] max-w-[600px] h-44 object-contain mx-auto drop-shadow-[0_0_12px_#58a6ff]/40">
                 </div>
             </div>

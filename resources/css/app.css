@@ -9,3 +9,15 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+@font-face {
+    font-family: 'Arabic';
+    src: url('/fonts/Amiri-Regular.ttf') format('truetype');
+}
+.font-arabic {
+    font-family: 'Arabic', serif;
+}
+.body-arabic {
+    direction: rtl;
+    text-align: right;
+}

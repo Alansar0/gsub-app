@@ -81,25 +81,22 @@ Route::middleware('auth')->group(function () {
     Route::get('/earn/index',[EarnController::class, 'index'])->name('earn.index');
     Route::get('/earn/morningAzkar',[EarnController::class, 'morningAzkar'])->name('earn.morningAzkar');
     Route::get('/earn/eveningAzkar',[EarnController::class, 'eveningAzkar'])->name('earn.eveningAzkar');
-    Route::get('/earn/friday',[EarnController::class, 'friday'])->name('earn.friday');
+    // Allow optional page parameter for Friday view (defaults handled in controller)
+    Route::get('/earn/friday/{shafi?}', [EarnController::class, 'friday'])->name('earn.friday');
     Route::get('/earn/makaranta/index',[EarnController::class, 'makaranta'])->name('earn.makaranta.index');
-    Route::get('/earn/makaranta/darasi',[EarnController::class, 'darasi'])->name('makaranta.darasi');
+    Route::get('/earn/makaranta/darasi/{course?}',[EarnController::class, 'darasi'])->name('makaranta.darasi');
 
 
-    Route::get('/earn/makaranta/{course}/{file}',[EarnController::class, 'sauraro'])->name('makaranta.sauraro');
-    Route::get('/earn/makaranta/karanta/{pageId}',[EarnController::class, 'karanta'])->name('makaranta.karanta');
-
-    // Audio/course listing + player
-    Route::get('/earn/makaranta/course/{course}/audios', [EarnController::class, 'audios'])->name('makaranta.audios.index');
-    Route::get('/earn/makaranta/course/{course}/audio/{file}', [EarnController::class, 'audioPlayer'])->name('makaranta.audio.player');
-
+    // Put the more specific karanta route before the generic course/{file} route
+     Route::get('/earn/makaranta/karanta/{pageId}', [EarnController::class, 'karanta'])->name('makaranta.karanta');
+    Route::get('/earn/makaranta/{course}/{file}', [EarnController::class, 'sauraro'])->name('makaranta.sauraro');
     Route::post('/earn/makaranta/quiz/{pageId}', [EarnController::class, 'submitQuiz'])->name('quiz.submit');
 
 
 
 
-// Route::get('/listen/{audio}', [AudioPlayController::class, 'show'])->name('audio.play');
-// Route::post('/quiz/submit', [AudioPlayController::class, 'submitQuiz'])->name('quiz.submit');
+    // Route::get('/listen/{audio}', [AudioPlayController::class, 'show'])->name('audio.play');
+    // Route::post('/quiz/submit', [AudioPlayController::class, 'submitQuiz'])->name('quiz.submit');
 
 
 

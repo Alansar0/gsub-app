@@ -14,6 +14,8 @@ class Wallet extends Model
         'balance',
         'prev_balance',
         'new_balance',
+        'cashback_balance',
+        'voucher_balance',
     ];
 
     public function user()
@@ -40,6 +42,7 @@ class Wallet extends Model
         ]);
     }
 
+
     public function debit($amount, $description = 'Manual Debit')
     {
         $prev = $this->balance;
@@ -55,6 +58,37 @@ class Wallet extends Model
             'description' => $description,
             'status' => 'success',
         ]);
+    }
+     /**
+     * Add cashback from quiz or reward.
+     */
+    public function addCashback($amount)
+    {
+        $this->cashback_balance += $amount;
+
+        // 👇 Don't deduct cashback, just sync voucher equivalence
+        $this->voucher_balance = floor($this->cashback_balance / 200);
+
+        $this->save();
+    }
+
+    /**
+     * User purchases something using vouchers.
+     * Deduct voucher + equivalent cashback.
+     */
+    public function useVoucher($count = 1)
+    {
+        $voucherValue = 200 * $count;
+
+        // Ensure user has enough balance
+        if ($this->cashback_balance >= $voucherValue && $this->voucher_balance >= $count) {
+            $this->cashback_balance -= $voucherValue;
+            $this->voucher_balance -= $count;
+            $this->save();
+            return true;
+        }
+
+        return false;
     }
 
 }

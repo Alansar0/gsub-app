@@ -29,6 +29,7 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 Route::view('/test', 'test');
+Route::get('/healthz', function(){ return response('ok', 200); });
 Route::post('/webhook/paymentpoint', [PaymentController::class, 'webhook'])->name('payment.webhook');
 Route::match(['get', 'post'], '/simulate-webhook', function () {
     $fakeData = [

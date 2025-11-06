@@ -26,7 +26,7 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pdo_mysql zip \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Copy app files
+# Copy built app from previous stage
 COPY --from=build /app /var/www/html
 
 # Copy Nginx config
@@ -34,14 +34,14 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 WORKDIR /var/www/html
 
-# Set permissions
+# Fix permissions
 RUN chown -R www-data:www-data storage bootstrap/cache
 
-# Laravel storage link
-RUN php artisan storage:link || true
+# Make sure Nginx listens on Render's provided port
+RUN sed -i "s/listen 80;/listen ${PORT:-8080};/" /etc/nginx/conf.d/default.conf
 
-# Expose HTTP port
-EXPOSE 80
+# Expose the Render port (default 8080)
+EXPOSE 8080
 
-# Start PHP-FPM and Nginx
+# Start Nginx and PHP-FPM together
 CMD service nginx start && php-fpm

@@ -3,10 +3,11 @@ FROM composer:2 AS build
 
 WORKDIR /app
 
-COPY composer.json composer.lock ./
-RUN composer install --no-dev --no-interaction --no-progress --prefer-dist
-
+# Copy everything first (so artisan and all files exist)
 COPY . .
+
+# Install PHP dependencies
+RUN composer install --no-dev --no-interaction --no-progress --prefer-dist
 RUN composer dump-autoload --optimize
 
 
@@ -37,11 +38,11 @@ WORKDIR /var/www/html
 # Fix permissions
 RUN chown -R www-data:www-data storage bootstrap/cache
 
-# Make sure Nginx listens on Render's provided port
+# Update Nginx to listen on Render’s dynamic port
 RUN sed -i "s/listen 80;/listen ${PORT:-8080};/" /etc/nginx/conf.d/default.conf
 
-# Expose the Render port (default 8080)
+# Expose Render’s port
 EXPOSE 8080
 
-# Start Nginx and PHP-FPM together
+# Start both Nginx and PHP-FPM
 CMD service nginx start && php-fpm

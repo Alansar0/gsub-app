@@ -26,6 +26,8 @@ RUN apt-get update && apt-get install -y \
 # Copy application from builder
 COPY --from=build /app /var/www/html
 
+RUN rm -f /etc/nginx/conf.d/default.conf
+
 # Copy Nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 

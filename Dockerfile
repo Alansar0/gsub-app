@@ -2,11 +2,10 @@
 FROM composer:2 AS build
 
 WORKDIR /app
-COPY . .
+COPY composer.json composer.lock ./
 RUN composer install --no-dev --no-interaction --optimize-autoloader
+COPY . .
 RUN composer dump-autoload --optimize
-
-
 
 # Stage 2: Production image
 FROM php:8.2-fpm
@@ -20,21 +19,28 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libonig-dev \
     libxml2-dev \
-    && docker-php-ext-install pdo_mysql zip \
+    curl \
+    && docker-php-ext-install pdo_mysql mbstring zip \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copy application from builder
 COPY --from=build /app /var/www/html
 
-RUN rm -f /etc/nginx/conf.d/default.conf
-
-# Copy Nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# nginx template and start script
+COPY nginx.conf /etc/nginx/conf.d/default.conf.template
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
 
 WORKDIR /var/www/html
 
-# Permissions
-RUN chown -R www-data:www-data storage bootstrap/cache
+# Permissions for Laravel
+RUN chown -R www-data:www-data storage bootstrap/cache || true
+
+# Expose a conventional port (informational). Render will provide $PORT at runtime.
+EXPOSE 8080
+
+# Start script will substitute PORT and run php-fpm + nginx
+CMD ["/start.sh"]RUN chown -R www-data:www-data storage bootstrap/cache
 
 # Render dynamic port replacement
 RUN sed -i "s/listen 80;/listen ${PORT:-8080};/" /etc/nginx/conf.d/default.conf

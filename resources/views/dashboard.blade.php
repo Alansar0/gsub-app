@@ -38,18 +38,18 @@
         class="mx-5 my-5 bg-gradient-to-br from-[#161b22] to-[#0f172a] rounded-2xl p-8 text-[#f0f6fc] shadow-[0_0_15px_rgba(88,166,255,0.3)] flex justify-between">
         <div>
             <span class="text-lg text-[#f0f6fc]/70">Wallet Balance</span>
-            <div class="text-2xl font-bold mt-1">₦50,000.00</div>
+            <div class="text-2xl font-bold mt-1">₦{{ number_format($wallet->balance, 2) }}</div>
         </div>
         <div>
             <span class="text-lg text-[#58a6ff] flex items-center gap-1">Palmpay <i
                     class="material-icons text-sm">content_copy</i></span>
-            <div class="mt-1 text-lg text-[#f0f6fc]">1234567890</div>
+            <div class="mt-1 text-lg text-[#f0f6fc]">{{ $wallet->account_number }}</div>
         </div>
     </div>
 
     <!-- Quick Actions -->
     <div class="grid grid-cols-2 gap-3 mx-5 my-5">
-        <a href="{{ route('wallet.acc') }}"
+        <a href="{{ route('user.accno') }}"
             class="bg-[#161b22] border border-[#58a6ff]/40 p-4 rounded-2xl text-center transition hover:bg-[#182430] cursor-pointer shadow-md">
             <div class="bg-[#182430] border border-[#58a6ff]/30 rounded-xl inline-block py-3 px-4.5 text-[#58a6ff]">
                 <i class="fas fa-wallet text-3xl"></i>
@@ -112,7 +112,7 @@
     <div class="mx-5 my-5">
         <div class="flex justify-between items-center mb-3">
             <h2 class="text-lg text-[#58a6ff] font-semibold">Recent Transactions</h2>
-            <a href="#" class="text-sm text-[#58a6ff]/80 no-underline hover:text-[#58a6ff]">View All</a>
+            <a href="{{ route('transactions.index') }}" class="text-sm text-[#58a6ff]/80 no-underline hover:text-[#58a6ff]">View All</a>
         </div>
 
         @foreach ([['title' => 'Voucher Purchased', 'date' => '20.01.2025', 'amount' => '-₦96', 'status' => 'Successful', 'color' => 'red-400'], ['title' => 'Wallet Funded', 'date' => '20.01.2025', 'amount' => '+₦190', 'status' => 'Failed', 'color' => 'green-400'], ['title' => 'Dribbble', 'date' => '01.01.2025', 'amount' => '-₦29.99', 'status' => 'Merchant Payment', 'color' => 'red-400']] as $t)

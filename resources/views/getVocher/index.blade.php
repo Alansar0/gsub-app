@@ -85,8 +85,9 @@
         <div class="grid grid-cols-3 gap-3">
             @for ($i = 0; $i < 9; $i++)
                 <div class="bg-[#1b1b1f] rounded-xl p-4 flex flex-col text-center border border-gray-700 h-full">
-                    <p class="text-white font-bold text-lg">150<span class="text-sm font-normal">MB</span></p>
-                    <p class="text-gray-300 text-sm mb-4">₦50</p>
+                    {{-- <p class="text-white font-bold text-lg">150<span class="text-sm font-normal">MB</span></p> --}}
+                    <p class="font-semibold text-white">1VCH/6HRS</p>
+                    <p class="text-gray-300 text-sm mb-4">₦200</p>
 
                     <a href="{{ route('getVocher.paycheckout') }}"
                         class="mt-auto flex justify-between items-center border border-[#58a6ff] rounded-lg px-4 py-2 text-lg text-[#58a6ff] font-medium hover:bg-[#58a6ff]/10 transition-all">

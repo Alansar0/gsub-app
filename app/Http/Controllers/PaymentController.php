@@ -3,90 +3,143 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Transaction;
+use App\Models\User;
 use App\Models\Wallet;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Transaction;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 class PaymentController extends Controller
 {
-    // Step 1: Initiate payment
-    public function initialize(Request $request)
+    /**
+     * Webhook endpoint for PaymentPoint.
+     * Behavior toggled by env PAYMENTPOINT_MODE (fake|live).
+     */
+    public function webhook(Request $request)
+        // public function handleWebhook(Request $request)
     {
-        $amount = $request->amount;
-        $reference = uniqid('pay_');
+        $mode = env('PAYMENTPOINT_MODE', 'fake');
 
-        // Create a transaction record
-        $transaction = Transaction::create([
-            'user_id' => Auth::id(),
+        if ($mode === 'fake') {
+            // -----------------------------
+            // FAKE / SIMULATION FLOW (DEV)
+            // -----------------------------
+            Log::info('[FAKE WEBHOOK] payload:', $request->all());
+
+            $data = $request->all();
+
+            // You might accept either amount_paid or amount depending on your simulate-route
+            $amount = $data['amount_paid'] ?? $data['amount'] ?? 0;
+            $transactionId = $data['transaction_id'] ?? 'SIM-' . now()->timestamp;
+            $status = $data['transaction_status'] ?? $data['status'] ?? 'success';
+
+            if ($status !== 'success') {
+                return response()->json(['status' => 'ignored'], 200);
+            }
+
+            // Try to find user by email or phone (your simulation sends customer details)
+            $user = null;
+            if (!empty($data['customer']['email'])) {
+                $user = User::where('email', $data['customer']['email'])->first();
+            }
+            if (!$user && !empty($data['customer']['phone'])) {
+                $user = User::where('phone', $data['customer']['phone'])->first();
+            }
+
+            // If user not found — optionally map by receiver.account_number to wallets
+            if (!$user && !empty($data['receiver']['account_number'])) {
+                $wallet = Wallet::where('account_number', $data['receiver']['account_number'])->first();
+                $user = $wallet?->user;
+            }
+
+            if ($user && $user->wallet) {
+                $user->wallet->credit($amount, 'Simulated Payment (fake webhook)');
+            }
+
+            Transaction::create([
+                'user_id' => $user->id ?? null,
+                'type' => 'credit',
+                'amount' => $amount,
+                'status' => 'success',
+                'reference' => $transactionId,
+                'description' => $data['description'] ?? 'Simulated payment',
+                'gateway' => 'paymentpoint_fake',
+            ]);
+
+            return response()->json(['status' => 'ok', 'mode' => 'fake']);
+        }
+
+        // -----------------------------
+        // REAL / PRODUCTION FLOW (LIVE)
+        // -----------------------------
+        // Uncomment and use this section when PaymentPoint gives you the secret & signs webhooks
+        /*
+        // 1. Verify signature
+        $payload = $request->getContent();
+        $signature = $request->header('Paymentpoint-Signature') ?? $request->header('X-Paymentpoint-Signature');
+
+        if (empty($signature) || empty(env('PAYMENTPOINT_SECRET_KEY'))) {
+            Log::warning('[PAYMENTPOINT] Missing signature or secret.');
+            return response('Invalid signature', 400);
+        }
+
+        $calculated = hash_hmac('sha256', $payload, env('PAYMENTPOINT_SECRET_KEY'));
+
+        if (!hash_equals($calculated, $signature)) {
+            Log::warning('[PAYMENTPOINT] Signature mismatch', ['calc' => $calculated, 'sig' => $signature]);
+            return response('Invalid signature', 400);
+        }
+
+        // 2. Decode payload and handle only success events
+        $data = json_decode($payload, true);
+
+        if (($data['transaction_status'] ?? '') !== 'success') {
+            return response()->json(['status' => 'ignored'], 200);
+        }
+
+        // 3. Find the wallet by the receiver account number (this is the canonical mapping)
+        $receiverAccount = $data['receiver']['account_number'] ?? null;
+        $wallet = Wallet::where('account_number', $receiverAccount)->first();
+
+        if (!$wallet) {
+            Log::error('[PAYMENTPOINT] Wallet not found for account', ['account' => $receiverAccount]);
+            return response('Wallet not found', 404);
+        }
+
+        // 4. Credit wallet safely
+        $amount = $data['amount_paid'] ?? $data['amount'] ?? 0;
+        $txId = $data['transaction_id'] ?? null;
+
+        $wallet->credit($amount, 'PaymentPoint deposit');
+        Transaction::create([
+            'user_id' => $wallet->user_id,
+            'type' => 'credit',
             'amount' => $amount,
-            'reference' => $reference,
-            'status' => 'pending',
+            'status' => 'success',
+            'reference' => $txId,
+            'description' => $data['description'] ?? 'PaymentPoint deposit',
             'gateway' => 'paymentpoint',
         ]);
 
-        // Redirect to PaymentPoint (replace this with real API URL)
-        return redirect()->away("https://paymentpoint.co/pay?amount=$amount&ref=$reference");
+        return response()->json(['status' => 'ok']);
+        */
     }
 
-    // Step 2: Handle Webhook callback
-                public function webhook(Request $request)
-            {
-                // Log incoming webhook
-                \Log::info('PaymentPoint webhook received:', $request->all());
-
-                $reference = $request->reference ?? null;
-                $status = $request->status ?? null;
-                $accountNumber = $request->account_number ?? null;
-                $amount = $request->amount ?? 0;
-
-                // Find transaction if reference exists
-                $transaction = Transaction::where('reference', $reference)->first();
-
-                if ($transaction && $status === 'success') {
-                    $transaction->update(['status' => 'success']);
-
-                    $wallet = Wallet::firstOrCreate(['user_id' => $transaction->user_id]);
-                    $wallet->increment('balance', $transaction->amount);
-                }
-
-                // Or if PaymentPoint sends only account number (without reference)
-                elseif ($accountNumber && $status === 'success') {
-                    $user = \App\Models\User::where('virtual_account', $accountNumber)->first();
-
-                    if ($user) {
-                        $wallet = Wallet::firstOrCreate(['user_id' => $user->id]);
-                        $wallet->increment('balance', $amount);
-
-                        Transaction::create([
-                            'user_id' => $user->id,
-                            'amount' => $amount,
-                            'status' => 'success',
-                            'reference' => 'fund_' . uniqid(),
-                            'gateway' => 'paymentpoint',
-                        ]);
-                    }
-                }
-
-                return response()->json(['message' => 'Webhook processed successfully']);
-            }
-
-                    public function simulateWebhook()
-        {
-            // Fake test data that mimics a real payment
-            $fakeData = [
-                'reference' => 'TEST_REF_' . rand(1000, 9999),
-                'status' => 'success',
-                'account_number' => auth()->user()->virtual_account ?? '1234567890',
-                'amount' => 5000,
-            ];
-
-            // Log the fake data for confirmation
-            \Log::info('Simulated webhook triggered:', $fakeData);
-
-            // Call the actual webhook logic directly (no HTTP call)
-            $request = new \Illuminate\Http\Request($fakeData);
-            return $this->webhook($request);
+    /**
+     * Optional: initialize payment (call PaymentPoint API to give user instructions)
+     * For fake mode, you can simulate a redirect URL or reference.
+     */
+    public function initialize(Request $request)
+    {
+        if (env('PAYMENTPOINT_MODE', 'fake') === 'fake') {
+            // Return fake redirect/instructions for dev
+            return response()->json([
+                'status' => 'ok',
+                'payment_url' => url('/simulate-payment-page'),
+                'reference' => 'SIM-' . now()->timestamp,
+            ]);
         }
 
-
+        // Real initialization code using PAYMENTPOINT_API_KEY / BEARER token goes here...
+    }
 }

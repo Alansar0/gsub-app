@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -10,7 +11,7 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -33,26 +34,24 @@ class User extends Authenticatable
         return $this->hasOne(Wallet::class);
     }
 
-        protected static function booted()
-    {
-        static::created(function ($user) {
-            // Create a wallet automatically
-            \App\Models\Wallet::create([
-                'user_id' => $user->id,
-                'account_number' => self::generateAccountNumber(),
-                'balance' => 0,
-            ]);
-        });
-    }
+            protected static function booted()
+        {
+            static::created(function ($user) {
+                Wallet::create([
+                    'user_id' => $user->id,
+                    'account_number' => self::generateAccountNumber(),
+                    'balance' => 0,
+                ]);
+            });
+        }
 
-    public static function generateAccountNumber()
-    {
-        do {
-            $account = '66' . mt_rand(10000000, 99999999); // e.g. 6612345678
-        } while (self::where('virtual_account', $account)->exists());
-
-        return $account;
-    }
+        public static function generateAccountNumber()
+        {
+            do {
+                $account = '66' . mt_rand(10000000, 99999999);
+            } while (Wallet::where('account_number', $account)->exists());
+            return $account;
+        }
 
 
 

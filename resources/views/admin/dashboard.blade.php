@@ -107,8 +107,8 @@
                     <div class="py-1">
                         <a href="{{ route('viewUser') }}"
                             class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">All Users</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Fund
-                            User</a>
+                        <a href="{{ route('wallets.manage') }}" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Manage
+                            User Wallet</a>
                         <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Debit
                             User</a>
                         <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Upgrade
@@ -194,30 +194,7 @@
         </div>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
 
-            <!-- Dropdown 5 -->
-            <div class="relative inline-block text-left bg-[#182430] rounded-xl p-4 shadow-md">
-                <button id="userDropdown5"
-                    class="w-full inline-flex justify-between items-center text-sm font-medium text-[#f0f6fc] focus:outline-none">
-                    Makaranta Mana
-                    <svg class="w-5 h-5 ml-2 text-[#58a6ff]" xmlns="http://www.w3.org/2000/svg" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                    </svg>
-                </button>
-                <div id="userMenu5"
-                    class="hidden absolute mt-2 w-56 rounded-lg shadow-lg bg-[#161b22] ring-1 ring-[#58a6ff]/40 divide-y divide-gray-700 z-50">
-                    <div class="py-1">
-                        <a href="{{ route('admin.makaranta.lesson.index') }}"
-                            class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Makaranta mng</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Fund
-                            User</a>
-                        <a href=""
-                            class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Add Notes
-                            User</a>
 
-                    </div>
-                </div>
-            </div>
         </div>
         <script>
             document.addEventListener('DOMContentLoaded', () => {

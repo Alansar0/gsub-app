@@ -12,7 +12,7 @@ return new class extends Migration {
         $table->string('type');
         $table->decimal('amount', 16, 2);
         $table->string('status')->default('pending');
-        $table->string('reference')->nullable(); // ❌ removed "after `status`"
+        $table->string('reference')->unique();
         $table->text('description')->nullable();
         $table->string('gateway')->nullable(); // e.g. paymentpoint
         $table->timestamps();

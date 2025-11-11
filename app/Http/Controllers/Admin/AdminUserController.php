@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Wallet;
+use App\Models\Transaction;
 use Illuminate\Support\Facades\Hash;
 
 class AdminUserController extends Controller
@@ -90,28 +92,45 @@ class AdminUserController extends Controller
     }
 
 
-      public function walletView()
-    {
-        $wallets = Wallet::with('user')->get();
-        return view('admin.walletView', compact('wallets'));
-    }
 
-    public function updateBalance(Request $request, $walletId)
-    {
-        $request->validate([
-            'amount' => 'required|numeric',
-            'action' => 'required|in:credit,debit',
-        ]);
+     public function walletView(Request $request)
+        {
+            $wallet = null;
+            $transactions = collect();
 
-        $wallet = Wallet::findOrFail($walletId);
+            if ($q = $request->query('query')) {
+                $wallet = Wallet::where('account_number', $q)
+                    ->orWhereHas('user', function ($query) use ($q) {
+                        $query->where('email', $q)->orWhere('phone_number', $q);
+                    })->first();
+                if ($wallet) {
+                    $transactions = Transaction::where('user_id', $wallet->user_id)
+                        ->latest()->take(10)->get();
+                }
+            }
 
-        if ($request->action == 'credit') {
-            $wallet->credit($request->amount, 'Admin credit');
-        } else {
-            $wallet->debit($request->amount, 'Admin debit');
+            return view('admin.user.walletManage', compact('wallet', 'transactions'));
         }
 
-        return back()->with('success', 'Wallet updated successfully!');
+
+    public function updateWallet(Request $request, Wallet $wallet)
+    {
+        // $wallet = Wallet::findOrFail($wallet);
+        $request->validate([
+            'type' => 'required|in:credit,debit',
+            'amount' => 'required|numeric|min:0.01',
+            'description' => 'nullable|string|max:255',
+        ]);
+
+        $desc = $request->description ?? 'Manual adjustment';
+
+        if ($request->type === 'credit') {
+            $wallet->credit($request->amount, $desc);
+        } else {
+            $wallet->debit($request->amount, $desc);
+        }
+
+        return back()->with('success', 'Wallet updated successfully.');
     }
 
 }

@@ -27,10 +27,10 @@
                         </div>
 
                         <div class="text-right">
-                            <span class="text-base font-semibold text-[#58a6ff]">
+                            <span class="text-base font-semibold  {{ $transaction->type == 'credit' ? 'text-green-400' : 'text-red-400' }}">
                                 ₦{{ number_format($transaction->amount, 2) }}
                             </span>
-                            <small class="block text-xs mt-1 {{ $transaction->status == 'completed' ? 'text-green-400' : 'text-red-400' }} capitalize">
+                            <small class="block text-xs mt-1 text-[#f0f6fc]   capitalize">
                                 {{ $transaction->status }}
                             </small>
                         </div>

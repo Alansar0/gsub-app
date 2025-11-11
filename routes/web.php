@@ -7,10 +7,10 @@ use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\SupportCostumerController;
 use App\Http\Controllers\SupportController;
-use App\Http\Controllers\WalletController;
 use App\Http\Controllers\GetVocherController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\EarnController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Admin\AdminController;
@@ -30,6 +30,8 @@ Route::get('/', function () {
 Route::view('/test', 'test');
 Route::get('/healthz', function(){ return response('ok', 200); });
 Route::post('/webhook/paymentpoint', [PaymentController::class, 'webhook'])->name('payment.webhook');
+Route::post('/payment/initialize', [PaymentController::class, 'initialize'])->name('payment.initialize'); // if you call PaymentPoint to initialize
+
 Route::match(['get', 'post'], '/simulate-webhook', function () {
     $fakeData = [
         "notification_status" => "payment_successful",
@@ -60,19 +62,17 @@ Route::match(['get', 'post'], '/simulate-webhook', function () {
 
     // Send it to your webhook route
     // $response = Http::post(url('/webhook/paymentpoint'), $fakeData);
-    $response = Http::post('https://nonleaking-still-michale.ngrok-free.dev/webhook/paymentpoint', $fakeData);
+    $response = Http::post('https://http://127.0.0.1:8000/webhook/paymentpoint', $fakeData);
 
     return $response->json();
 });
 
 Route::middleware('auth')->group(function () {
-    Route::view('/dashboard', 'dashboard')->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class,'dashboard'])->name('dashboard');
     Route::view('/profile/index', 'profile.index')->name('profile');
-    // Route::view('/wallet/accno', 'wallet.accno')->name('wallet.acc');
 
     //getVocher route
-    Route::get('/wallet/accno', [WalletController::class, 'acc'])->name('user.wallet');
-    Route::get('/wallet/accno', [WalletController::class, 'acc'])->name('wallet.acc');
+    Route::get('/wallet/accno', [DashboardController::class, 'acc'])->name('user.accno');
     Route::get('/getVocher/index', [GetVocherController::class, 'index'])->name('getVocher.index');
     Route::get('/getVocher/paycheckout', [GetVocherController::class, 'paycheckout'])->name('getVocher.paycheckout');
     Route::get('/getVocher/receipt', [GetVocherController::class, 'receipt'])->name('getVocher.receipt');
@@ -92,15 +92,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/earn/makaranta/{course}/{file}', [EarnController::class, 'sauraro'])->name('makaranta.sauraro');
     Route::post('/earn/makaranta/quiz/{pageId}', [EarnController::class, 'submitQuiz'])->name('quiz.submit');
 
-
-
-
-    // Route::get('/listen/{audio}', [AudioPlayController::class, 'show'])->name('audio.play');
-    // Route::post('/quiz/submit', [AudioPlayController::class, 'submitQuiz'])->name('quiz.submit');
-
-
-
-
     // Notifications
     Route::post('notifications/{id}/read', [NotificationController::class,'markRead'])->name('notifications.read');
     Route::post('notifications/read-all', [NotificationController::class,'markAllRead'])->name('notifications.readAll');
@@ -111,9 +102,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/transactions/index', [TransactionController::class, 'index'])->name('transactions.index');
     Route::get('/help/index', [SupportController::class, 'index'])->name('help.index');
 
-        //PaymentPoint Routes
-        Route::post('/webhook/paymentpoint', [PaymentController::class, 'webhook'])->name('payment.webhook');
-        Route::post('/pay/initiate', [PaymentController::class, 'initialize'])->name('payment.initialize');
+    //PaymentPoint Routes
+    // Route::post('/api/payment/webhook', [PaymentWebhookController::class, 'handleWebhook']);
+    // Route::post('/webhook/paymentpoint', [PaymentController::class, 'webhook'])->name('payment.webhook');
+    // Route::post('/pay/initiate', [PaymentController::class, 'initialize'])->name('payment.initialize');
 
     Route::post('/logout', [SessionController::class, 'destroy'])->name('logout');
 });
@@ -145,9 +137,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::PATCH('/admin/users/{id}/edit', [AdminUserController::class, 'update'])->name('User.update');
     Route::DELETE('/admin/users/viewUser/{id}', [AdminUserController::class, 'destroy'])->name('viewUser.delete');
 
+
     // Admin User Wallet Management
-    Route::get('/admin/user/wallets', [AdminUserController::class, 'walletView'])->name('admin.walletView');
-    Route::post('/admin/user/wallets/{wallet}/update', [AdminUserController::class, 'updateBalance'])->name('admin.wallets.update');
+    Route::get('/admin/user/walletManage', [AdminUserController::class, 'walletView'])->name('wallets.manage');
+    Route::put('/admin/user/walletManage/{wallet}/updateFund', [AdminUserController::class, 'updateWallet'])->name('wallets.updateFund');
 
     // Admin User Password Management
     Route::get('/admin/user/changepassword', [AdminUserController::class, 'displaychangepassword'])->name('display.change.password');
@@ -165,6 +158,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Admin transactions
     Route::get('/admin/transactions/all', [AdminTransactionController::class, 'all'])->name('T.all');
     Route::get('/admin/transactions/processings', [AdminTransactionController::class, 'processings'])->name('T.processings');
+
 
 
 });

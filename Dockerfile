@@ -1,48 +1,46 @@
-# Stage 1: Build with Composer
+# Stage 1: Build PHP dependencies with Composer
 FROM composer:2 AS build
 
 WORKDIR /app
-
-# Copy everything first (so artisan and all files exist)
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --no-interaction --optimize-autoloader
 COPY . .
-
-# Install PHP dependencies
-RUN composer install --no-dev --no-interaction --no-progress --prefer-dist
 RUN composer dump-autoload --optimize
-
 
 # Stage 2: Production image
 FROM php:8.2-fpm
 
-# Install system dependencies
+# Install system packages and extensions
 RUN apt-get update && apt-get install -y \
     nginx \
     git \
-    zip \
     unzip \
     libpng-dev \
+    libzip-dev \
     libonig-dev \
     libxml2-dev \
-    libzip-dev \
-    && docker-php-ext-install pdo_mysql zip \
+    curl \
+    && docker-php-ext-install pdo_mysql mbstring zip \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Copy built app from previous stage
+# Copy application from builder
 COPY --from=build /app /var/www/html
 
-# Copy Nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy nginx template and start script (start.sh will substitute the port at runtime)
+COPY nginx.conf /etc/nginx/conf.d/default.conf.template
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
 
 WORKDIR /var/www/html
 
-# Fix permissions
-RUN chown -R www-data:www-data storage bootstrap/cache
+# Ensure Laravel directories have correct permissions
+RUN chown -R www-data:www-data storage bootstrap/cache || true
 
-# Update Nginx to listen on Render’s dynamic port
-RUN sed -i "s/listen 80;/listen ${PORT:-8080};/" /etc/nginx/conf.d/default.conf
-
-# Expose Render’s port
+# Informational expose; Render provides PORT at runtime and docker-compose uses environment to pass it
 EXPOSE 8080
 
-# Start both Nginx and PHP-FPM
-CMD service nginx start && php-fpm
+# Use start script that will:
+# - substitute the runtime PORT into nginx config
+# - ensure php-fpm listens on TCP 127.0.0.1:9000
+# - start php-fpm and nginx (nginx in foreground)
+CMD ["/start.sh"]

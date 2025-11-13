@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Wallet;
 use App\Models\Transaction;
+use App\Models\Reseller;
+use App\Models\Router;
 use Illuminate\Support\Facades\Hash;
 
 class AdminUserController extends Controller
@@ -132,5 +134,127 @@ class AdminUserController extends Controller
 
         return back()->with('success', 'Wallet updated successfully.');
     }
+
+
+    /**
+     * Admin manual upgrade or router add
+     */
+
+    public function adminUpgradeView()
+    {
+        return view('admin.user.manual-upgrade');
+    }
+
+
+    /**
+     * Admin Manual Upgrade endpoint
+     */
+    public function manualUpgrade(Request $request)
+    {
+        // 1. Validation for the target user ID and router details
+        $request->validate([
+            // Ensures the user exists AND their role is NOT already 'reseller'
+            // to prevent accidental re-upgrade, though updateOrCreate handles that model-wise.
+            'user_id' => 'required|exists:users,id',
+            'name' => 'required|string|max:100|unique:resellers,name',
+            'host' => 'required|string|max:255',
+            'port' => 'required|numeric',
+            'username' => 'required|string|max:100',
+            'password' => 'required|string|max:255',
+        ]);
+
+        // We use the validated user_id here
+        $userId = $request->user_id;
+
+        // 2. Find the user to be upgraded
+        $userToUpgrade = User::find($userId);
+
+        // 3. Create or update the Reseller record
+        $reseller = Reseller::updateOrCreate(
+            ['user_id' => $userId],
+            ['name' => $request->name, 'status' => 'active']
+        );
+
+        // 4. Create or update the Router details
+        Router::updateOrCreate(
+            ['reseller_id' => $reseller->id],
+            [
+                'host' => $request->host,
+                'port' => $request->port,
+                'username' => $request->username,
+                // Encrypt the password for security
+                'password' => encrypt($request->password),
+            ]
+        );
+
+        // 5. Update the user's role to 'reseller'
+        $userToUpgrade->update(['role' => 'reseller']);
+
+        return response()->json([
+            'success' => true,
+            'message' => "User ID {$userId} successfully upgraded and router details saved.",
+            'reseller_id' => $reseller->id
+        ], 200);
+    }
+
+    // App\Http\Controllers\Admin\AdminUserController.php
+
+// public function manualUpgrade(Request $request)
+// {
+//     // 1. Validation: Require either email or phone_number, and the router details
+//     $request->validate([
+//         'email' => 'required_without:phone_number|email|exists:users,email', // Must exist in the 'users' table
+//         'phone_number' => 'required_without:email|string|exists:users,phone_number', // Must exist if email is missing
+//         'name' => 'required|string|max:100|unique:resellers,name',
+//         'host' => 'required|string|max:255',
+//         'port' => 'required|numeric',
+//         'username' => 'required|string|max:100',
+//         'password' => 'required|string|max:255',
+//     ]);
+
+//     // 2. Find the user based on the provided identifier
+//     if ($request->filled('email')) {
+//         $userToUpgrade = User::where('email', $request->email)->first();
+//     } elseif ($request->filled('phone_number')) {
+//         $userToUpgrade = User::where('phone_number', $request->phone_number)->first();
+//     } else {
+//         // This should not happen if validation passes, but serves as a fallback.
+//         return response()->json(['error' => 'User identifier (email or phone) not provided.'], 422);
+//     }
+
+//     // Safety check (redundant if 'exists' rule is used, but good practice)
+//     if (!$userToUpgrade) {
+//         return response()->json(['error' => 'User not found in the system.'], 404);
+//     }
+
+//     $userId = $userToUpgrade->id; // Now we have the user_id for the relational data
+
+//     // 3. Create or update the Reseller record
+//     $reseller = Reseller::updateOrCreate(
+//         ['user_id' => $userId],
+//         ['name' => $request->name, 'status' => 'active']
+//     );
+
+//     // 4. Create or update the Router details
+//         Router::updateOrCreate(
+//         ['reseller_id' => $reseller->id],
+//         [
+//             'host' => $request->host,
+//             'port' => $request->port,
+//             'username' => $request->username,
+//             'password' => encrypt($request->password),
+//         ]
+//     );
+
+//     // 5. Update the user's role to 'reseller'
+//     $userToUpgrade->update(['role' => 'reseller']);
+
+//     return response()->json([
+//         'success' => true,
+//         'message' => "User ({$userToUpgrade->email}) successfully upgraded and router details saved.",
+//         'reseller_id' => $reseller->id
+//     ], 200);
+// }
+
 
 }

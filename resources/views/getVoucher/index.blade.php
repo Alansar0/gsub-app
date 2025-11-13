@@ -1,4 +1,4 @@
-<x-layouts.app>
+{{-- <x-layouts.app>
     <div class="bg-[#0d0d0f] text-white min-h-screen font-sans py-2 px-4">
         <div class=" w-full flex justify-start mt-6 mb-4">
             <a href="{{ url()->previous() }}" class="text-[#58a6ff] hover:underline flex items-center">
@@ -85,8 +85,7 @@
         <div class="grid grid-cols-3 gap-3">
             @for ($i = 0; $i < 9; $i++)
                 <div class="bg-[#1b1b1f] rounded-xl p-4 flex flex-col text-center border border-gray-700 h-full">
-                    {{-- <p class="text-white font-bold text-lg">150<span class="text-sm font-normal">MB</span></p> --}}
-                    <p class="font-semibold text-white">1VCH/6HRS</p>
+                    <p class="text-white font-bold text-lg">150<span class="text-sm font-normal">MB</span></p>
                     <p class="text-gray-300 text-sm mb-4">₦200</p>
 
                     <a href="{{ route('getVocher.paycheckout') }}"
@@ -99,4 +98,46 @@
         </div>
 
     </div>
+</x-layouts.app> --}}
+<x-layouts.app>
+<div class="min-h-screen bg-[#0B141A] text-white p-8">
+    <h1 class="text-2xl font-semibold mb-6">Purchase Voucher</h1>
+
+    @if(session('success'))
+        <div class="bg-green-600/30 text-green-200 p-4 rounded-xl mb-4">
+            {{ session('success') }}
+        </div>
+    @endif
+    @if(session('error'))
+        <div class="bg-red-600/30 text-red-200 p-4 rounded-xl mb-4">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    <form method="POST" action="{{ route('getVoucher.store') }}" class="space-y-5">
+        @csrf
+        <div>
+            <label class="block mb-2 text-sm font-semibold">Select Reseller</label>
+            <select name="reseller_id" class="w-full bg-[#141E26] p-3 rounded-xl border border-[#1F2A33]">
+                @foreach($resellers as $reseller)
+                    <option value="{{ $reseller->id }}">{{ $reseller->name }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div>
+            <label class="block mb-2 text-sm font-semibold">Voucher Profile</label>
+            <select name="profile_id" class="w-full bg-[#141E26] p-3 rounded-xl border border-[#1F2A33]">
+                @foreach($profiles as $profile)
+                    <option value="{{ $profile->id }}">{{ $profile->name }} — ₦{{ number_format($profile->price,2) }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <button type="submit" class="bg-[#00FFD1] text-black px-6 py-3 rounded-xl font-bold hover:bg-[#00CCA9] transition">
+            Purchase Voucher
+        </button>
+    </form>
+</div>
 </x-layouts.app>
+

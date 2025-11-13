@@ -7,9 +7,11 @@ use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\SupportCostumerController;
 use App\Http\Controllers\SupportController;
-use App\Http\Controllers\GetVocherController;
+use App\Http\Controllers\GetVoucherController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\EarnController;
+use App\Http\Controllers\ResellerController;
+use App\Http\Controllers\PaymentWebhookController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
@@ -19,6 +21,7 @@ use App\Http\Controllers\Admin\AdminSettingsController;
 use App\Http\Controllers\Admin\AdminTransactionController;
 use App\Http\Controllers\Admin\SupportmeController;
 use App\Http\Controllers\Admin\MakarantaController;
+use App\Http\Controllers\Admin\AdminVoucherController;
 use App\Http\Controllers\NotificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -70,12 +73,19 @@ Route::match(['get', 'post'], '/simulate-webhook', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class,'dashboard'])->name('dashboard');
     Route::view('/profile/index', 'profile.index')->name('profile');
+    Route::view('/getVoucher/paycheckout', 'getVoucher.paycheckout')->name('getVoucher.paycheckout');
+    Route::view('/getVoucher/receipt', 'getVoucher.receipt')->name('getVoucher.receipt');
+
 
     //getVocher route
     Route::get('/wallet/accno', [DashboardController::class, 'acc'])->name('user.accno');
-    Route::get('/getVocher/index', [GetVocherController::class, 'index'])->name('getVocher.index');
-    Route::get('/getVocher/paycheckout', [GetVocherController::class, 'paycheckout'])->name('getVocher.paycheckout');
-    Route::get('/getVocher/receipt', [GetVocherController::class, 'receipt'])->name('getVocher.receipt');
+    Route::get('/getVoucher/index', [GetVoucherController::class, 'index'])->name('getVoucher.index');
+    Route::post('/getVoucher/index', [GetVoucherController::class, 'store'])->name('getVoucher.store');
+    // Route::get('/getVoucher/paycheckout', [GetVoucherController::class, 'paycheckout'])->name('getVoucher.paycheckout');
+    // Route::get('/getVoucher/receipt', [GetVoucherController::class, 'receipt'])->name('getVoucher.receipt');
+
+    Route::resource('voucher-profiles', ResellerController::class)
+        ->names('reseller.upgrade');
 
     //Earn section
     Route::get('/earn/index',[EarnController::class, 'index'])->name('earn.index');
@@ -137,6 +147,11 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::PATCH('/admin/users/{id}/edit', [AdminUserController::class, 'update'])->name('User.update');
     Route::DELETE('/admin/users/viewUser/{id}', [AdminUserController::class, 'destroy'])->name('viewUser.delete');
 
+    //ADMIN UPGRADE USER MANAGEMENT
+    Route::get('/admin/user/manual-upgrade', [AdminUserController::class, 'adminUpgradeView'])->name('admin.reseller-view');
+    Route::post('/admin/user/manual-upgrade', [AdminUserController::class, 'manualUpgrade'])->name('admin.reseller.upgrade');
+
+
 
     // Admin User Wallet Management
     Route::get('/admin/user/walletManage', [AdminUserController::class, 'walletView'])->name('wallets.manage');
@@ -159,8 +174,14 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/transactions/all', [AdminTransactionController::class, 'all'])->name('T.all');
     Route::get('/admin/transactions/processings', [AdminTransactionController::class, 'processings'])->name('T.processings');
 
+    Route::post('/api/vouchers/purchase', [GetVoucherController::class,'purchase'])->middleware('auth:sanctum');
+    Route::post('/api/user/upgrade-to-reseller', [ResellerController::class,'requestUpgrade'])->middleware('auth:sanctum');
 
 
+    //voucher profiles management
+    Route::resource('voucher-profiles', AdminVoucherController::class)
+        ->names('admin.voucher_profiles');
+        // ->only(['index', 'store', 'update', 'destroy']);
 });
 
 

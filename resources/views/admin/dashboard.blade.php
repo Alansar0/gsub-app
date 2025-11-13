@@ -111,7 +111,7 @@
                             User Wallet</a>
                         <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Debit
                             User</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Upgrade
+                        <a href="{{ route('admin.reseller-view') }}" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Upgrade
                             User</a>
                         <a href="#"
                             class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Block/Unblock</a>
@@ -134,7 +134,7 @@
                 <div id="userMenu2"
                     class="hidden absolute mt-2 w-56 rounded-lg shadow-lg bg-[#161b22] ring-1 ring-[#58a6ff]/40 divide-y divide-gray-700 z-50">
                     <div class="py-1">
-                        <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Add vocher
+                        <a href="{{ route('admin.voucher_profiles.index') }}" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Add vocher
                             plan</a>
                         <a href="#" class="block px-4 py-2 text-sm text-[#f0f6fc] hover:bg-[#182430]">Edit vocher
                             plan</a>
